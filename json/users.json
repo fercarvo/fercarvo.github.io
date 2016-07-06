@@ -1,56 +1,11 @@
-{
-	"users":[
-	    {
-	    	"username":"radix", 
-	    	"password":"asdf",
-	    	"id":"1",
-	    	"data":[{
-	    		"firstName":"Edgar", 
-		    	"lastName":"Carvajal", 
-		    	"cedula":"0701010101",
-		    	"email": "edgar.carvajal@gmail.com",  
-		    	"direccion": "boom", 
-		    	"phone": "2220806", 
-		    	"foto": "1"
-	    	}],
-	    	"exams":[{
-	    		"bloodType": "A", 
-	    		"fecha":"01/07/2016", 
-		    	"tipo":"Nose", 
-		    	"estado": "1"
-	    	}],
-	    },
-	    {
-	    	"username":"pancake", 
-	    	"password":"asdf",
-	    	"id":"2",
-	    	"data":[{
-	    		"firstName":"Edgar", 
-		    	"lastName":"Carvajal", 
-		    	"cedula":"0701010101",
-		    	"email": "edgar.carvajal@gmail.com",  
-		    	"direccion": "boom", 
-		    	"phone": "2220806", 
-		    	"foto": "1"
-	    	}],
-	    	"exams":[{
-	    	}]
-	    },
-	    {
-	    	"username":"quick", 
-	    	"password":"asdf",
-	    	"id":"3",
-	    	"data":[{
-	    		"firstName":"Edgar", 
-		    	"lastName":"Carvajal", 
-		    	"cedula":"0701010101",
-		    	"email": "edgar.carvajal@gmail.com",  
-		    	"direccion": "boom", 
-		    	"phone": "2220806", 
-		    	"foto": "1",
-	    	}],
-	    	"exams":[{
-	    	}]
-	    }
-	]
-}
+[
+    {
+    	"username":"radix","password":"asdf","id":"1"
+    },
+    {
+    	"username":"pancake","password":"asdf","id":"2"
+	},
+    {
+    	"username":"quick", "password":"asdf","id":"3"
+    }
+]
