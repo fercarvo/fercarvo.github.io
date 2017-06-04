@@ -1,12 +1,78 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <!--Materialize-->
+    <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/css/materialize.min.css"/>
+    <!--Let browser know website is optimized for mobile-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <!--AngularJS-->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+    <script>
+
+    </script>
+
     <title>Kalafitness - Administrador</title>
 
 
   </head>
 
-  <body ng-app="appOperator">
+  <body ng-app="myApp">
 
+    <header class="container">
+      <ul id="slide-out" class="side-nav fixed">
+        <li class="">
+          <div class="userView teal">
+            <a href="#"><img class="circle" src="imagenes/1.jpg"></a>
+            <a href="#"><span class="white-text name">asdasdasdasda</span></a>
+            <a href="#"><span class="white-text email">Operario</span></a>
+          </div>
+        </li>
+        <li><a class="waves-effect teal-text" ui-sref="pacientes"><i class="material-icons">supervisor_account</i>Pacientes</a></li>
+        <li><div class="divider"></div></li>
+        <li><a class="waves-effect teal-text" ui-sref="muestras"><i class="material-icons">view_list</i>Muestras M&eacute;dicas</a></li>
+        <li><div class="divider"></div></li>
+        <li><a class="waves-effect teal-text" ui-sref="reportesMensuales"><i class="material-icons">assessment</i>Estad&iacute;sticas Mensuales</a></li>
+        <li><a class="waves-effect teal-text" ui-sref="reportesTotales"><i class="material-icons">assessment</i>Estad&iacute;sticas Totales</a></li>
+        <li><div class="divider"></div></li>
+        <li><a class="waves-effect teal-text" href="/logout"><i class="material-icons">power_settings_new</i>Salir</a></li>
+      </ul>
+    </header>
+
+
+    <main>
+      <nav class="white" role="navigation">
+        <div class="nav-wrapper container">
+          <a data-activates="slide-out" class="button-collapse"><i class="material-icons">menu</i></a>
+          <a id="logo-container" href="#" class="brand-logo center">
+            <img src="imagenes/sans.jpg" height="47px" width="240px" alt="logo">
+          </a>
+        </div>
+      </nav>
+      <div class="container">
+        <ui-view></ui-view>
+      </div>
+    </main>
+
+
+
+
+
+
+    <!--  Scripts-->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min.js"></script>
+    <script type="text/javascript">
+    //Funcion que activa el collapsable del menu cuando cambia de tamaño
+    (function($){
+      $(function(){
+
+        $('.button-collapse').sideNav();
+        $('.parallax').parallax();
+
+      }); // end of document ready
+    })(jQuery); // end of jQuery name space
+    </script>
   </body>
 </html>
