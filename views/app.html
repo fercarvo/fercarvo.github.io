@@ -9,7 +9,41 @@
 
     <!--AngularJS-->
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+    <script src="https://unpkg.com/angular-ui-router/release/angular-ui-router.min.js"></script>
     <script>
+    var app = angular.module('myApp',['ui.router']);
+
+    app.config(function($stateProvider, $urlRouterProvider){
+        $stateProvider
+          .state('usuarios',{
+            url: '/usuarios',
+            templateUrl: 'file:///home/fercarvo/fercarvo.github.io/views/usuarios.html',
+            controller:'controllerUsuarios'
+          })
+
+        $urlRouterProvider.otherwise(function($injector) {
+            var $state = $injector.get('$state');
+            $state.go('usuarios');
+        });
+      });
+
+      app.controller('controllerUsuarios', function($scope, $state, $http){
+
+        $scope.pacientes = [{nombre: "Edgar" ,correo: "asdasdasd"},{nombre: "Fernando" ,correo: "asdasdasd"}];
+
+        $scope.agregar = function(){
+          console.log("en agregar");
+        }
+
+        $scope.putPaciente = function(){
+          console.log("en put paciente");
+        }
+
+        $('.collapsible').collapsible({
+          accordion : false // A setting that changes the collapsible behavior to expandable instead of the default accordion style
+        });
+
+      })
 
     </script>
 
@@ -31,11 +65,6 @@
         </li>
         <li><a class="waves-effect teal-text" ui-sref="pacientes"><i class="material-icons">supervisor_account</i>Pacientes</a></li>
         <li><div class="divider"></div></li>
-        <li><a class="waves-effect teal-text" ui-sref="muestras"><i class="material-icons">view_list</i>Muestras M&eacute;dicas</a></li>
-        <li><div class="divider"></div></li>
-        <li><a class="waves-effect teal-text" ui-sref="reportesMensuales"><i class="material-icons">assessment</i>Estad&iacute;sticas Mensuales</a></li>
-        <li><a class="waves-effect teal-text" ui-sref="reportesTotales"><i class="material-icons">assessment</i>Estad&iacute;sticas Totales</a></li>
-        <li><div class="divider"></div></li>
         <li><a class="waves-effect teal-text" href="/logout"><i class="material-icons">power_settings_new</i>Salir</a></li>
       </ul>
     </header>
@@ -52,11 +81,6 @@
         <ui-view></ui-view>
       </div>
     </main>
-
-
-
-
-
 
 
     <!--  Scripts-->
