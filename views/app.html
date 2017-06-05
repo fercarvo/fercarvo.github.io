@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <script>document.write('<base href="' + location.href + '">');</script>
     <!--Materialize-->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/css/materialize.min.css"/>
@@ -27,15 +26,15 @@
     app.config(function($stateProvider, $urlRouterProvider){
         $stateProvider
           .state('usuarios',{
-            url: '/usuarios',
+            url: '//usuarios',
             templateUrl: 'https://fercarvo.github.io/views/usuarios.html',
             controller:'controllerUsuarios'
           }).state('facturas',{
-            url: '/facturas',
+            url: '//facturas',
             templateUrl: 'https://fercarvo.github.io/views/facturas.html',
             controller:'controllerFacturas'
           }).state('personal',{
-            url: '/personal',
+            url: '//personal',
             templateUrl: 'https://fercarvo.github.io/views/personal.html',
             controller:'controllerPersonal'
           });
