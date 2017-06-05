@@ -6,6 +6,17 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/css/materialize.min.css"/>
     <!--Let browser know website is optimized for mobile-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    
+    <style>
+      .container {
+          background-color: #f2f2f2;
+          border: 1px solid #ccc;
+          padding: 20px;
+          top: 20px;
+          -webkit-box-shadow: 0 2px 2px 1px rgba(0, 0, 0, 0.2);
+          box-shadow: 0 2px 2px 1px rgba(0, 0, 0, 0.2);
+      }  
+    </style>  
 
     <!--AngularJS-->
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
@@ -115,7 +126,7 @@
   </head>
 
   <body ng-app="myApp">
-  <div>
+
     <header class="container">
       <ul id="slide-out" class="side-nav fixed">
         <li class="">
@@ -147,7 +158,6 @@
         <ui-view></ui-view>
       </div>
     </main>
-    </div>
 
 
     <!--  Scripts-->
