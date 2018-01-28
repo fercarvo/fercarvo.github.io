@@ -19,62 +19,81 @@
         loadTemplates($state, "documento", $http, $templateCache)
 
     }])
-    .controller('documento', ["$scope", "$state", "$http", function($scope, $state, $http){
-
-    }])
-    .controller('diapositiva', ["$scope", "$state", function($scope, $state){
-
-    }])
     .controller('aplicativo', ["$scope", function ($scope) {
+        class Matrix {
+            constructor (matrix, param) {
+                if (matrix && Array.isArray(matrix) && matrix.length > 0) {
+                    this.rows = matrix.length
+                    this.columns = matrix[0].length
 
-        var worker = new GenericWebWorker([1,2,3,4,5,6,7])
+                    var ok = matrix.every(row => {
+                        return (row.length === this.columns) && row.every(elm => {
+                            return 'number' === typeof elm
+                        })
+                    })
 
-        worker.exec(arr => {
-            console.log(arr)
-            for (var i = 0; i < 2000000000; i++) {
-                
-            }
-            return i
-        }).then(res => console.log('termino worker'))
+                    if (!ok)
+                        throw new Error('Invalid matrix');
 
-        const dot = (X, Y) => {
-            var result = new Array(X.length);
-            for (var r = 0; r < X.length; r++) {
-                result[r] = new Array(Y[0].length).fill(0)
-                for (var c = 0; c < Y[0].length; c++) {
-                    for (var i = 0; i < X[0].length; i++)
-                        result[r][c] += a[r][i] * b[i][c];              
+                    this.data = matrix
+                } else if (param === 'empty'){
+                    this.rows = null
+                    this.columns = null
+                    this.data = []
+                } else {
+                    throw new Error(`${matrix} is not an Array of Number Arrays`)
                 }
             }
-            return result
-        }
 
-        const calc = (X, fn) => {
-            for (var i = 0; i < X.length; i++)
-                for (var j = 0; j < X[0].length; j++)
-                    X[i][j] = fn(X[i][j]);
 
-            return X
+            static dot (A, B) {
+                var result = new Array(A.length);
+                for (var r = 0; r < A.length; r++) {
+                    result[r] = new Array(B[0].length).fill(0)
+                    for (var c = 0; c < B[0].length; c++) {
+                        for (var i = 0; i < A[0].length; i++)
+                            result[r][c] += A[r][i] * B[i][c];              
+                    }
+                }
+                return result
+            }
+
+            static random (n, m) {
+                var matrix = new Array(n).fill( new Array(m).fill(0) )
+                return matrix.map(fila => fila.map(z => Math.random() ))
+            }
+
+            static subtract (A, B) {
+                return A.map((fila, i) => fila.map((elm, j) => elm - B[i][j]))
+            }
+
+            static add (A, B) {
+                return A.map((fila, i) => fila.map((elm, j) => elm + B[i][j]))
+            }
+
+            static multiply (A, B) {
+                return A.map((fila, i) => fila.map((elm, j) => elm * B[i][j]))
+            }
+
+            static eval (X, fn) {
+                return X.map(fila => fila.map(val => fn(val)))
+            }
+
+            static transpose (matrix) { 
+                return matrix[0].map((x,i)=> matrix.map(x => x[i])) 
+            }
         }
 
         function sigmoid(matrix, flag = false, factor = 1) {
-            matrix = matrix.tolist();        
-            if (flag) {
-                for (var i = 0; i < matrix.length; i++)
-                    for (var j = 0; j < matrix[0].length; j++)
-                        matrix[i][j] = ( matrix[i][j] * (1 - matrix[i][j]) ) * factor;           
-            } else {
-                for (var i = 0; i < matrix.length; i++)
-                    for (var j = 0; j < matrix[0].length; j++)
-                        matrix[i][j] = 1 / (1 + Math.exp(-matrix[i][j]));
-            }
-            return nj.array(matrix)
+            if (flag)
+                return Matrix.eval(matrix, x => ((x*(1-x))*factor))          
+            else
+                return Matrix.eval(matrix, x => 1/(1 + Math.exp(-x)))
         }
 
-        //console.log('nj.array', nj.array, 'nj.random', nj.random)
-        function redNeuronal (valor_esperado, factor) {
-            var entradas = nj.array([[0, 0], [0, 1], [1, 0], [1, 1]])
-            valor_esperado = nj.array([valor_esperado]).T 
+        function redNeuronal (valor_esperado, factor, iter = 500000) {
+            var entradas = [[0, 0], [0, 1], [1, 0], [1, 1]]
+            valor_esperado = valor_esperado.map(n => [n]) //Transpuesta
             var layer_inputs;
             var w_hidden_layer;
             var w_out_layer;
@@ -83,58 +102,56 @@
             var error_w_hidden_layer;
             var delta_w_hidden_layer;
 
-            var W1 = nj.random([2, 3]).tolist()
-            W1 = calc(W1, x => 2*x-1)
+            var W1 = Matrix.random(2, 3)
+            var W2 = Matrix.random(3, 1)
 
-            /*for (var i = 0; i < W1.length; i++) {
-                for (var j = 0; j < W1[0].length; j++) {
-                    W1[i][j] = 2 * W1[i][j] - 1;
-                }
-            }*/
+            W1 = Matrix.eval(W1, x => 2*x-1)
+            W2 = Matrix.eval(W2, x => 2*x-1)
 
-            var W2 = nj.random([3, 1]).tolist()
-            W2 = calc(W2, x => 2*x-1)
-            /*for (var i = 0; i < W2.length; i++) {
-                for (var j = 0; j < W2[0].length; j++) {
-                    W2[i][j] = 2 * W2[i][j] - 1;
-                }
-            }*/
 
-            W1 = nj.array(W1)
-            W2 = nj.array(W2)
-
-            for (var i = 0; i < 100000; i++) {
+            for (var i = 0; i < iter; i++) {
                 layer_inputs = entradas
-                w_hidden_layer = sigmoid(nj.dot(layer_inputs, W1), false, factor)
-                w_out_layer = sigmoid(nj.dot(w_hidden_layer, W2), false, factor)
+                w_hidden_layer = sigmoid(Matrix.dot(layer_inputs, W1), false, factor)
+                w_out_layer = sigmoid(Matrix.dot(w_hidden_layer, W2), false, factor)
 
-                error_w_out_layer = valor_esperado.subtract(w_out_layer)
-                delta_w_out_layer = error_w_out_layer.multiply( sigmoid(w_out_layer, true, factor) )
-                error_w_hidden_layer = nj.dot(delta_w_out_layer, W2.T)
-                delta_w_hidden_layer = error_w_hidden_layer.multiply( sigmoid(w_hidden_layer, true, factor) )
-                W1 = W1.add( nj.dot(layer_inputs.T, delta_w_hidden_layer) )
-                W2 = W2.add( nj.dot(w_hidden_layer.T, delta_w_out_layer) )
-                console.log(i)
+                error_w_out_layer = Matrix.subtract(valor_esperado, w_out_layer)
+                delta_w_out_layer = Matrix.multiply(error_w_out_layer, sigmoid(w_out_layer, true, factor))
+
+                error_w_hidden_layer = Matrix.dot(delta_w_out_layer, Matrix.transpose(W2))
+                delta_w_hidden_layer = Matrix.multiply(error_w_hidden_layer, sigmoid(w_hidden_layer, true, factor))
+
+                W1 = Matrix.add( W1, Matrix.dot( Matrix.transpose(layer_inputs) , delta_w_hidden_layer ) )
+                W2 = Matrix.add( W2, Matrix.dot( Matrix.transpose(w_hidden_layer) , delta_w_out_layer ) )
             }
-
-            W2 = W2//.tolist();
-            W1 = W1//.tolist();
-
             return { W2, W1, w_out_layer }
         }
 
-        var factor = 0.7
-        /*var res = redNeuronal([0,0,0,1], factor)
-        console.log(res)
-        console.log('total', XNOR(1, 0, res))
-        console.log('total', XNOR(0, 0, res))
-        console.log('total', XNOR(1, 1, res))
-        console.log('total', XNOR(0, 1, res))
-        */
-
         function XNOR (val1, val2, res) {
-            var result1 = sigmoid( nj.dot( nj.array([[val1,val2]]), res.W1 ) , false, 1)
-            var result2 = sigmoid( nj.dot(result1, res.W2), false, 1)
-            return result2.tolist()[0][0]
+            var result1 = sigmoid( Matrix.dot( [[val1, val2]], res.W1 ) , false, 1)
+            var result2 = sigmoid( Matrix.dot(result1, res.W2), false, 1)
+            return result2[0][0]
         }
+
+        var worker = new GenericWebWorker(Matrix, sigmoid, redNeuronal, XNOR)
+
+        worker.exec((Matrix, sigmoid, redNeuronal, XNOR) => {
+            var res = redNeuronal([0,0,0,1], 0.7, 500000)
+            console.log(res)
+            return res
+
+        }).then(res => {
+            console.log('total', XNOR(1, 0, res))
+            console.log('total', XNOR(0, 0, res))
+            console.log('total', XNOR(1, 1, res))
+            console.log('total', XNOR(0, 1, res))
+        })
+
+
+
+    }])
+    .controller('documento', ["$scope", "$state", "$http", function($scope, $state, $http){
+
+    }])
+    .controller('diapositiva', ["$scope", "$state", function($scope, $state){
+
     }])
