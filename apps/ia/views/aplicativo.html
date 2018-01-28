@@ -1,94 +1,61 @@
-<div id="aplicativo" style="text-align: center;">
-	<h3>
-		hola app
+<div id="aplicativo">
+	<h3 style="text-align: center;">
+		Calculo XNOR con Neuronal Networs
 	</h3>
-	<script type="text/javascript">
-		class Matrix {
-		    static dot (A, B) {
-		        var result = new Array(A.length);
-		        for (var r = 0; r < A.length; r++) {
-		            result[r] = new Array(B[0].length).fill(0)
-		            for (var c = 0; c < B[0].length; c++) {
-		                for (var i = 0; i < A[0].length; i++)
-		                    result[r][c] += A[r][i] * B[i][c];              
-		            }
-		        }
-		        return result
-		    }
+	<div class="row">
+		<div class="col-md-8">
+			<form ng-submit="calcular(factor, iteraciones)" style="text-align: left;">
+				<label class="col-2 col-form-label">Factor</label>
+		        <div class="col-10">
+					<input type="number" ng-model="factor" step="any" required>
+		        </div>
+				<label class="col-2 col-form-label">Iteraciones</label>
+		        <div class="col-10">
+					<input type="number" ng-model="iteraciones" min="200000" required>
+		        </div>
+		        <p></p>
+				<div class="col-2">
+					<button type="submit" class="btn btn-info">Generar</button>
+				</div>
+			</form>
+		</div>
+	</div>
+	<p></p>
+	<div style="text-align: left;">
+		<h4 style="text-align: center;">
+			Resultados
+		</h4>
+		<div >
+			<table class="table table-striped table-bordered">
+				<h4>W1</h4> 
+				<tbody>
+					<tr ng-repeat="fila in resultado.W1">
+						<td ng-repeat='valor in fila'>{{valor}}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
 
-		    static random (n, m) {
-		        var matrix = new Array(n).fill( new Array(m).fill(0) )
-		        return matrix.map(fila => fila.map(z => Math.random() ))
-		    }
+		<div >
+			<table class="table table-striped table-bordered">
+				<h4>W2</h4> 
+				<tbody>
+					<tr ng-repeat="fila in resultado.W2">
+						<td ng-repeat='valor in fila'>{{valor}}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
 
-		    static subtract (A, B) {
-		        return A.map((fila, i) => fila.map((elm, j) => elm - B[i][j]))
-		    }
-
-		    static add (A, B) {
-		        return A.map((fila, i) => fila.map((elm, j) => elm + B[i][j]))
-		    }
-
-		    static multiply (A, B) {
-		        return A.map((fila, i) => fila.map((elm, j) => elm * B[i][j]))
-		    }
-
-		    static calc (X, fn) {
-		        return X.map(fila => fila.map(val => fn(val)))
-		    }
-
-		    static transpose (matrix) { 
-		        return matrix[0].map((x,i)=> matrix.map(x => x[i])) 
-		    }
-		}
-
-		function sigmoid2(matrix, flag = false, factor = 1) {
-		    if (flag)
-		        return Matrix.calc(matrix, x => ((x*(1-x))*factor))          
-		    else
-		        return Matrix.calc(matrix, x => 1/(1 + Math.exp(-x)))
-		}
-
-		function redNeuronal2 (valor_esperado, factor, iter = 500000) {
-		    var entradas = [[0, 0], [0, 1], [1, 0], [1, 1]]
-		    valor_esperado = valor_esperado.map(n => [n]) //Transpuesta
-		    var layer_inputs;
-		    var w_hidden_layer;
-		    var w_out_layer;
-		    var error_w_out_layer;
-		    var delta_w_out_layer;
-		    var error_w_hidden_layer;
-		    var delta_w_hidden_layer;
-
-		    var W1 = Matrix.random(2, 3)
-		    W1 = Matrix.calc(W1, x => 2*x-1)
-
-		    var W2 = Matrix.random(3, 1)
-		    W2 = Matrix.calc(W2, x => 2*x-1)
-
-
-		    for (var i = 0; i < 100000; i++) {
-		        layer_inputs = entradas
-		        w_hidden_layer = sigmoid2(Matrix.dot(layer_inputs, W1), false, factor)
-		        w_out_layer = sigmoid2(Matrix.dot(w_hidden_layer, W2), false, factor)
-
-		        error_w_out_layer = Matrix.subtract(valor_esperado, w_out_layer)
-		        delta_w_out_layer = Matrix.multiply(error_w_out_layer, sigmoid2(w_out_layer, true, factor))
-
-		        error_w_hidden_layer = Matrix.dot(delta_w_out_layer, Matrix.transpose(W2))
-		        delta_w_hidden_layer = Matrix.multiply(error_w_hidden_layer, sigmoid2(w_hidden_layer, true, factor))
-
-		        W1 = Matrix.add( W1, Matrix.dot( Matrix.transpose(layer_inputs) , delta_w_hidden_layer ) )
-		        W2 = Matrix.add( W2, Matrix.dot( Matrix.transpose(w_hidden_layer) , delta_w_out_layer ) )
-		        console.log(i)
-		    }
-		    return { W2, W1, w_out_layer }
-		}
-
-		function XNOR2 (val1, val2, res) {
-			var result1 = sigmoid2( Matrix.dot( [[val1, val2]], res.W1 ) , false, 1)
-			var result2 = sigmoid2( Matrix.dot(result1, res.W2), false, 1)
-			return result2[0][0]
-		}
-	</script> 
+		<div >
+			<table class="table table-striped table-bordered">
+				<h4>W out layer</h4> 
+				<tbody>
+					<tr ng-repeat="fila in resultado.w_out_layer">
+						<td ng-repeat='valor in fila'>{{valor}}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
 </div>

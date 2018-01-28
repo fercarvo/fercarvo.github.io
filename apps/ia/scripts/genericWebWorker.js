@@ -30,7 +30,7 @@ class GenericWebWorker {
         var res = await new Promise((next, error) => {
             wk.onmessage = e => (e.data && e.data.error) ? error(e.data.error) : next(e.data);
             wk.onerror = e => error(e.message);        
-        }).finally(()=> { wk.terminate(), window.URL.revokeObjectURL(wk_link) })
+        }).finally(()=> { /*wk.terminate(), window.URL.revokeObjectURL(wk_link)*/ })
 
         return res
     }
