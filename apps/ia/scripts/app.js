@@ -25,6 +25,7 @@
 
         $scope.calcular = async function (factor, iteraciones) {
             waitingDialog.show('NN en curso, por favor espere');
+            console.time('Execution time')
             var output = [0,0,0,1]
             var worker = new GenericWebWorker(output, factor, iteraciones, Matrix, sigmoid, redNeuronal)
 
@@ -37,6 +38,7 @@
             $scope.resultado = res
             $scope.$apply()
             //console.log(res)
+            console.timeEnd('Execution time')
             console.log('\n')
             console.log('XNOR 1 0', XNOR(1, 0, res))
             console.log('XNOR 0 0', XNOR(0, 0, res))
