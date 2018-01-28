@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Visualización</title>
+    
+    <link rel="stylesheet" type="text/css" href="/styles/vendor/nv.d3.min.css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+    <link rel="stylesheet" type="text/css" href="/styles/styles.css" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
+
+</head>
+<body ng-app="app">
+    <div class="wrapper">
+        <nav id="sidebar">
+            <div id="dismiss">
+                <i class="glyphicon glyphicon-arrow-left"></i>
+            </div>
+
+            <div class="sidebar-header">
+                <h3>Data Minning ESPOL</h3>
+            </div>
+
+            <ul class="list-unstyled components">
+                <li ui-sref="listener">
+                    <a href="">Streamming de tweets</a>
+                </li>
+                <li ui-sref="dias">
+                    <a href="">Corpus</a>
+                </li>
+                <li ui-sref="grafico">
+                    <a href="">Graficos</a>
+                </li>
+                
+                <li>
+                    <a href="" data-toggle="collapse" aria-expanded="false">Contactos</a>
+                    <ul class="collapse list-unstyled" id="autores">
+                        <li><a href="https://github.com/fercarvo" target="_blank">Edgar Fernando Carvajal</a></li>
+                        <li><a href="https://github.com/wjvelez" target="_blank">Washignton Vélez</a></li>
+                    </ul>
+                </li>
+            </ul>
+
+            <ul class="list-unstyled CTAs">
+                <li><a href="https://github.com/fercarvo/DataMinningMicroB" target="_blank" class="text-center repo">Repositorio <i class="fa fa-github" style="font-size:20px"></i></a></li>
+            </ul>
+        </nav>
+
+        <div id="content">
+
+            <nav class="navbar navbar-default">
+                <div class="container-fluid">
+
+                    <div class="navbar-header">
+                        <button type="button" id="sidebarCollapse" class="btn btn-info navbar-btn">
+                            <i class="glyphicon glyphicon-align-left"></i>
+                            <span>Menú</span>
+                        </button>
+                    </div>
+
+                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                        <ul class="nav navbar-nav navbar-right">
+                            <li ui-sref="home"><a href="">Principal</a></li>
+                            <li ui-sref="dias"><a href="">Corpus</a></li>
+                            <li ui-sref="listener"><a href="">Listener</a></li>
+                            <li ui-sref="grafico"><a href="">Gáfico</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+
+            <div class="container contenido" style="padding-right: 0px;padding-left: 0px;">
+                <ui-view></ui-view>
+            </div>
+
+            <div class="footer">
+                <p class="text-center">Copyright 2017 &copy;</p>
+                <p class="text-center"><span>| </span>Edgar Carvajal <span> - </span> Washington Vélez<span> |</span></p>
+            </div>
+
+           
+        </div>
+        
+        <div class="overlay"></div>
+
+    </div>
+
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.5/angular.min.js"></script>
+<script src="/scripts/vendor/angular-ui-router.min.js"></script>
+       
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/3.17.0/math.min.js"></script>
+
+<script src="/scripts/vendor/d3.min.js" charset="utf-8"></script>
+<script src="/scripts/vendor/nv.d3.min.js"></script>
+<script src="/scripts/vendor/angular-ndv3.min.js"></script>
+
+<script src="/scripts/vendor/nprogress.js"></script>
+
+<!-- highcharts | heatmap -->
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/heatmap.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+
+
+<script src="/scripts/integradora.js"></script>
+
+<!-- Bootstrap Js CDN -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+-<!-- jQuery Custom Scroller CDN -->
+-<script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
+
+<script>
+    document.body.style.pointerEvents = 'none'
+
+    $(document).ready(function () {
+        $("#sidebar").mCustomScrollbar({
+            theme: "minimal"
+        });
+
+        $('#dismiss, .overlay').on('click', function () {
+            $('#sidebar').removeClass('active');
+            $('.overlay').fadeOut();
+        });
+
+        $('#sidebarCollapse').on('click', function () {
+            $('#sidebar').addClass('active');
+            $('.overlay').fadeIn();
+            $('.collapse.in').toggleClass('in');
+            $('a[aria-expanded=true]').attr('aria-expanded', 'false');
+        });
+    })
+
+    function loadTemplates($state, goState, $http, $templateCache) {
+
+        var promises = []
+        var states = $state.get()
+
+        for (i = 1; i < states.length; i++) {
+            var p = $http.get(states[i].templateUrl, { cache: $templateCache })
+            promises.push(p)
+            p.then(()=> {}, err=> console.log("Error template: ", err))
+        }
+
+        Promise.all(promises)
+            .then(()=> {}).catch(()=> {}).then(()=> {
+                $state.go(goState) ///////////////////////// State inicial                
+                document.body.style.pointerEvents = 'all'
+            })
+    }
+
+</script>
+
+
+</body>
+</html>
