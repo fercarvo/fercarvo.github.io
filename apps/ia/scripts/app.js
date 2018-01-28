@@ -16,7 +16,7 @@
     }])
     .run(["$state", "$http", "$templateCache", function ($state, $http, $templateCache) {
 
-        loadTemplates($state, documento, $http, $templateCache)
+        loadTemplates($state, "documento", $http, $templateCache)
 
     }])
     .controller('documento', ["$scope", "$state", "$http", function($scope, $state, $http){
