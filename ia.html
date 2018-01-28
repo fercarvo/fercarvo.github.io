@@ -2,13 +2,10 @@
 <html lang="es">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Visualización</title>
-    
+    <title>Visualización</title>    
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="/apps/ia/styles.css" />
-
+    <link rel="stylesheet" href="/apps/ia/styles.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
-
 </head>
 <body ng-app="app">
     <div class="wrapper">
@@ -22,10 +19,10 @@
             </div>
 
             <ul class="list-unstyled components">
-                <li ui-sref="listener">
+                <li ui-sref="documento">
                     <a href="">Streamming de tweets</a>
                 </li>
-                <li ui-sref="documento">
+                <li ui-sref="diapositiva">
                     <a href="">Documento</a>
                 </li>
                 <li ui-sref="grafico">
@@ -36,7 +33,7 @@
                     <a href="" data-toggle="collapse" aria-expanded="false">Contactos</a>
                     <ul class="collapse list-unstyled" id="autores">
                         <li><a href="https://github.com/fercarvo" target="_blank">Edgar Fernando Carvajal</a></li>
-                        <li><a href="https://github.com/wjvelez" target="_blank">Washignton Vélez</a></li>
+                        <li><a href="" target="_blank">......</a></li>
                     </ul>
                 </li>
             </ul>
@@ -50,63 +47,45 @@
 
             <nav class="navbar navbar-default">
                 <div class="container-fluid">
-
                     <div class="navbar-header">
                         <button type="button" id="sidebarCollapse" class="btn btn-info navbar-btn">
                             <i class="glyphicon glyphicon-align-left"></i>
                             <span>Menú</span>
                         </button>
                     </div>
-
                     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                         <ul class="nav navbar-nav navbar-right">
-                            <li ui-sref="home"><a href="">Principal</a></li>
                             <li ui-sref="documento"><a href="">Documento</a></li>
-                            <li ui-sref="listener"><a href="">Listener</a></li>
-                            <li ui-sref="grafico"><a href="">Gáfico</a></li>
+                            <li ui-sref="diapositiva"><a href="">DIapositiva</a></li>
+                            <li ui-sref="aplicativo"><a href="">Aplicativo</a></li>
                         </ul>
                     </div>
                 </div>
             </nav>
-
             <div class="container contenido" style="padding-right: 0px;padding-left: 0px;">
                 <ui-view></ui-view>
             </div>
 
             <div class="footer">
                 <p class="text-center">Copyright 2017 &copy;</p>
-                <p class="text-center"><span>| </span>Edgar Carvajal <span> - </span> Washington Vélez<span> |</span></p>
-            </div>
-
-           
-        </div>
-        
+                <p class="text-center"><span>| </span>Edgar Carvajal <span> - </span> Joe Cruz <span> - </span>Edgar Carvajal <span> |</span></p>
+            </div>           
+        </div>        
         <div class="overlay"></div>
-
     </div>
-
 <script src="https://code.jquery.com/jquery-3.2.1.min.js" crossorigin="anonymous"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.5/angular.min.js" crossorigin="anonymous"></script>
 <script src="/apps/ia/scripts/vendor/angular-ui-router.min.js"></script>       
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/3.17.0/math.min.js" crossorigin="anonymous"></script>
 <script src="/apps/ia/scripts/vendor/nprogress.js"></script>
-<!-- highcharts | heatmap -->
 <script src="https://code.highcharts.com/highcharts.js" crossorigin="anonymous"></script>
 <script src="https://code.highcharts.com/modules/heatmap.js" crossorigin="anonymous"></script>
 <script src="https://code.highcharts.com/modules/exporting.js" crossorigin="anonymous"></script>
-
-
 <script src="/apps/ia/scripts/app.js"></script>
-
-<!-- Bootstrap Js CDN -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" crossorigin="anonymous"></script>
-
--<!-- jQuery Custom Scroller CDN -->
 -<script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js" crossorigin="anonymous"></script>
-
 <script>
-    document.body.style.pointerEvents = 'none'
-
+    //document.body.style.pointerEvents = 'none'
     $(document).ready(function () {
         $("#sidebar").mCustomScrollbar({
             theme: "minimal"
