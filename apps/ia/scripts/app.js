@@ -91,7 +91,7 @@
                 return Matrix.eval(matrix, x => 1/(1 + Math.exp(-x)))
         }
 
-        function redNeuronal (valor_esperado, factor, iter = 500000) {
+        function redNeuronal (valor_esperado, factor, iter = 500000, Matrix, sigmoid) {
             var entradas = [[0, 0], [0, 1], [1, 0], [1, 1]]
             valor_esperado = valor_esperado.map(n => [n]) //Transpuesta
             var layer_inputs;
@@ -132,10 +132,10 @@
             return result2[0][0]
         }
 
-        var worker = new GenericWebWorker(Matrix, sigmoid, redNeuronal, XNOR)
+        var worker = new GenericWebWorker(Matrix, sigmoid, redNeuronal)
 
-        worker.exec((Matrix, sigmoid, redNeuronal, XNOR) => {
-            var res = redNeuronal([0,0,0,1], 0.7, 500000)
+        worker.exec((Matrix, sigmoid, redNeuronal) => {
+            var res = redNeuronal([0,0,0,1], 0.7, 500000, Matrix, sigmoid)
             console.log(res)
             return res
 
