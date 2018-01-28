@@ -76,16 +76,17 @@
 <script src="https://code.jquery.com/jquery-3.2.1.min.js" crossorigin="anonymous"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.5/angular.min.js" crossorigin="anonymous"></script>
 <script src="/apps/ia/scripts/vendor/angular-ui-router.min.js"></script>       
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/3.17.0/math.min.js" crossorigin="anonymous"></script>
 <script src="/apps/ia/scripts/vendor/nprogress.js"></script>
-<script src="https://code.highcharts.com/highcharts.js" crossorigin="anonymous"></script>
-<script src="https://code.highcharts.com/modules/heatmap.js" crossorigin="anonymous"></script>
-<script src="https://code.highcharts.com/modules/exporting.js" crossorigin="anonymous"></script>
-<script src="/apps/ia/scripts/app.js"></script>
+
+<script src="/apps/ia/scripts/genericWebWorker.js"></script>
+
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" crossorigin="anonymous"></script>
 -<script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js" crossorigin="anonymous"></script>
+
+<script src="/apps/ia/scripts/app.js"></script>
+
 <script>
-    //document.body.style.pointerEvents = 'none'
+    document.body.style.pointerEvents = 'none'
     $(document).ready(function () {
         $("#sidebar").mCustomScrollbar({
             theme: "minimal"
@@ -105,7 +106,6 @@
     })
 
     function loadTemplates($state, goState, $http, $templateCache) {
-
         var promises = []
         var states = $state.get()
 
@@ -123,7 +123,5 @@
     }
 
 </script>
-
-
 </body>
 </html>
