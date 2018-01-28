@@ -4,10 +4,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Visualización</title>
     
-    <link rel="stylesheet" type="text/css" href="/styles/vendor/nv.d3.min.css" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-
-    <link rel="stylesheet" type="text/css" href="/styles/styles.css" />
+    <link rel="stylesheet" type="text/css" href="/apps/ia/styles.css" />
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
 
@@ -27,8 +25,8 @@
                 <li ui-sref="listener">
                     <a href="">Streamming de tweets</a>
                 </li>
-                <li ui-sref="dias">
-                    <a href="">Corpus</a>
+                <li ui-sref="documento">
+                    <a href="">Documento</a>
                 </li>
                 <li ui-sref="grafico">
                     <a href="">Graficos</a>
@@ -63,7 +61,7 @@
                     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                         <ul class="nav navbar-nav navbar-right">
                             <li ui-sref="home"><a href="">Principal</a></li>
-                            <li ui-sref="dias"><a href="">Corpus</a></li>
+                            <li ui-sref="documento"><a href="">Documento</a></li>
                             <li ui-sref="listener"><a href="">Listener</a></li>
                             <li ui-sref="grafico"><a href="">Gáfico</a></li>
                         </ul>
@@ -87,33 +85,24 @@
 
     </div>
 
-<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.5/angular.min.js"></script>
-<script src="/scripts/vendor/angular-ui-router.min.js"></script>
-       
-<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/3.17.0/math.min.js"></script>
-
-<script src="/scripts/vendor/d3.min.js" charset="utf-8"></script>
-<script src="/scripts/vendor/nv.d3.min.js"></script>
-<script src="/scripts/vendor/angular-ndv3.min.js"></script>
-
-<script src="/scripts/vendor/nprogress.js"></script>
-
+<script src="https://code.jquery.com/jquery-3.2.1.min.js" crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.5/angular.min.js" crossorigin="anonymous"></script>
+<script src="/apps/ia/scripts/vendor/angular-ui-router.min.js"></script>       
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/3.17.0/math.min.js" crossorigin="anonymous"></script>
+<script src="/apps/ia/scripts/vendor/nprogress.js"></script>
 <!-- highcharts | heatmap -->
-<script src="https://code.highcharts.com/highcharts.js"></script>
-<script src="https://code.highcharts.com/modules/heatmap.js"></script>
-<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/highcharts.js" crossorigin="anonymous"></script>
+<script src="https://code.highcharts.com/modules/heatmap.js" crossorigin="anonymous"></script>
+<script src="https://code.highcharts.com/modules/exporting.js" crossorigin="anonymous"></script>
 
 
-<script src="/scripts/integradora.js"></script>
+<script src="/apps/ia/scripts/app.js"></script>
 
 <!-- Bootstrap Js CDN -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" crossorigin="anonymous"></script>
 
 -<!-- jQuery Custom Scroller CDN -->
--<script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
+-<script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js" crossorigin="anonymous"></script>
 
 <script>
     document.body.style.pointerEvents = 'none'
