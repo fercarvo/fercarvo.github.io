@@ -3,16 +3,6 @@
 		Logic Gates with Neuronal Networs
 	</h3>
 	<form ng-submit="calcular(factor, iteraciones, operacion)" class="container">
-	  <!--<div class="form-row">
-	    <div class="form-group col-md-6">
-	      <label for="inputEmail4">Email</label>
-	      <input type="email" class="form-control" id="inputEmail4" placeholder="Email">
-	    </div>
-	    <div class="form-group col-md-6">
-	      <label for="inputPassword4">Password</label>
-	      <input type="password" class="form-control" id="inputPassword4" placeholder="Password">
-	    </div>
-	  </div>-->
 	  <div class="form-row">
 	    <div class="form-group col-md-5">
 	      <label>Iteraciones</label>
@@ -68,27 +58,6 @@
 		</div>
 	</div>
 
-
-	<!--<form ng-submit="calcular(factor, iteraciones)" style="text-align: left;">
-		<div class="form-row">
-			<div class="form-group col-md-5">
-				<input type="text" class="form-control" placeholder="First name">
-			</div>
-			<div class="form-group col-md-5">
-				<input type="text" class="form-control" placeholder="Last name">
-			</div>					
-		</div>
-		<label class="col-2 col-form-label">Factor</label>
-        <div class="col-10">
-			<input type="number" ng-model="factor" step="any" required>
-        </div>
-		<label class="col-2 col-form-label">Iteraciones</label>
-        <div class="col-10">
-			<input type="number" ng-model="iteraciones" min="200000" required>
-        </div>
-        <p></p>
-		<button type="submit" class="btn btn-info">Generar</button>
-	</form>-->
 	<p></p>
 	<p></p>
 	<div style="text-align: left;">
@@ -100,7 +69,7 @@
 				<h4>W1</h4> 
 				<tbody>
 					<tr ng-repeat="fila in resultado.W1">
-						<td ng-repeat='valor in fila'>{{valor}}</td>
+						<td ng-repeat='valor in fila'>{{valor | number : 5}}</td>
 					</tr>
 				</tbody>
 			</table>

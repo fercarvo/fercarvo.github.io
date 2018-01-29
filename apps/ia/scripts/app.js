@@ -13,6 +13,11 @@
                 templateUrl: 'https://fercarvo.github.io/apps/ia/views/aplicativo.html',
                 controller: 'aplicativo'
             })     
+
+        //False en modo de produccion
+        $compileProvider.debugInfoEnabled(false)
+        $compileProvider.commentDirectivesEnabled(false)
+        $compileProvider.cssClassDirectivesEnabled(false)
     }])
     .run(["$state", "$http", "$templateCache", function ($state, $http, $templateCache) {
         loadTemplates($state, "aplicativo", $http, $templateCache)
@@ -44,13 +49,13 @@
                 return alert("Ingrese una operacion")
 
             $scope.operacion_nombre = operacion
-            waitingDialog.show('NN en curso, por favor espere');
+            waitingDialog.show('N.N. en curso, por favor espere');
             
             var timer = new Timer()    
             timer.start({precision: 'secondTenths'});
             timer.addEventListener('secondTenthsUpdated', function (e) {
                  let t = timer.getTimeValues().toString(['minutes', 'seconds', 'secondTenths'])
-                 waitingDialog.message(`NN en curso, por favor espere ${t}`)
+                 waitingDialog.message(`N.N. en curso, por favor espere   ${t}`)
             })
 
             console.time('Execution time')
