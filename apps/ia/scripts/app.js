@@ -45,39 +45,32 @@
 
         $scope.calcular = async function (factor, iteraciones, operacion) {
 
-            if (!operacion)
-                return alert("Ingrese una operacion")
-
             $scope.operacion_nombre = operacion
             waitingDialog.show('N.N. en curso, por favor espere');
-            
-            var timer = new Timer()    
-            timer.start({precision: 'secondTenths'});
-            timer.addEventListener('secondTenthsUpdated', function (e) {
-                 let t = timer.getTimeValues().toString(['minutes', 'seconds', 'secondTenths'])
-                 waitingDialog.message(`N.N. en curso, por favor espere   ${t}`)
+
+            var time
+            var endTimer = cronometro(t => { 
+                waitingDialog.message(`N.N. en curso, por favor espere ${t}`), time = t
             })
 
-            console.time('Execution time')
             var output = operaciones[operacion]
             var worker = new GenericWebWorker(output, factor, iteraciones, Matrix, sigmoid, redNeuronal)
 
             var res = await worker.exec((output, factor, iter, Matrix, sigmoid, redNeuronal) => {
                 var res = redNeuronal(output, factor, iter, Matrix, sigmoid)
-                console.log('End Process...')
+                console.log('\nEnd Process...')
                 return res
             })
+            
             waitingDialog.hide()
 
             $scope.resultado = res
             $scope.estimador = true
             $scope.$apply()
 
-            timer.stop()
-            timer = null
+            endTimer()
             console.log(res)
-            console.timeEnd('Execution time')
-            console.log('\n')
+            console.log(`Time: ${time}`)
             console.log('XNOR 1 0', XNOR(1, 0, res))
             console.log('XNOR 0 0', XNOR(0, 0, res))
             console.log('XNOR 1 1', XNOR(1, 1, res))
@@ -93,3 +86,21 @@
     }])
     .controller('diapositiva', ["$scope", "$state", function($scope, $state){
     }])
+
+
+function cronometro(callback) {
+    var t = 0; 
+    var time = ``;
+    var interval = setInterval(()=> {
+        t += 100;
+        var min = Math.trunc(t/60000)%60;
+        var seg = Math.trunc((t/1000)%60);
+        var mils = Math.trunc((t%1000)/10);
+        time = `${min > 9 ? min : '0'+min}:${seg > 9 ? seg : '0'+seg}:${mils > 9 ? mils : '0'+mils}`
+        callback(time)
+    }, 100)
+
+    return function() {
+        clearInterval(interval)
+    }
+}
