@@ -64,37 +64,54 @@
 		<h4 style="text-align: center;">
 			Resultados
 		</h4>
-		<div >
-			<table class="table table-striped table-bordered">
-				<h4>W1</h4> 
-				<tbody>
-					<tr ng-repeat="fila in resultado.W1">
-						<td ng-repeat='valor in fila'>{{valor | number : 5}}</td>
-					</tr>
-				</tbody>
-			</table>
+		
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title">Weights hidden layer</h3>
+			</div>
+			<div class="panel-body">
+				<table class="table table-hover table-bordered">
+					<tbody>
+						<tr ng-repeat="fila in resultado.W1">
+							<td style="font-weight: bold;">h{{$index + 1}}</td>
+							<td ng-repeat='valor in fila'>W{{$index}}:&nbsp; {{valor | number : 5}}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>			
 		</div>
 
-		<div >
-			<table class="table table-striped table-bordered">
-				<h4>W2</h4> 
-				<tbody>
-					<tr ng-repeat="fila in resultado.W2">
-						<td ng-repeat='valor in fila'>{{valor}}</td>
-					</tr>
-				</tbody>
-			</table>
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title">Weights output layer</h3>
+			</div>
+			<div class="panel-body">
+				<table class="table table-hover table-bordered">
+					<tbody>
+						<tr ng-repeat="fila in resultado.W2">
+							<td style="width: 10px; font-weight: bold;">W{{$index}}</td>
+							<td ng-repeat='valor in fila'>{{valor | number : 5}}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>			
 		</div>
 
-		<div >
-			<table class="table table-striped table-bordered">
-				<h4>W out layer</h4> 
-				<tbody>
-					<tr ng-repeat="fila in resultado.w_out_layer">
-						<td ng-repeat='valor in fila'>{{valor}}</td>
-					</tr>
-				</tbody>
-			</table>
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title">Out Xnor</h3>
+			</div>
+			<div class="panel-body">
+				<table class="table table-hover table-bordered">
+					<tbody>
+						<tr ng-repeat="fila in resultado.w_out_layer">
+							<td style="width: 10px; font-weight: bold;">Out{{$index}}</td>
+							<td ng-repeat='valor in fila'>{{valor | number: 6}}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>			
 		</div>
+
 	</div>
 </div>

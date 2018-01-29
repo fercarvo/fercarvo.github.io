@@ -68,13 +68,14 @@
                 return res
             })
             waitingDialog.hide()
+
             $scope.resultado = res
             $scope.estimador = true
             $scope.$apply()
 
             timer.stop()
             timer = null
-            //console.log(res)
+            console.log(res)
             console.timeEnd('Execution time')
             console.log('\n')
             console.log('XNOR 1 0', XNOR(1, 0, res))

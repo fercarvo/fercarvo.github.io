@@ -48,7 +48,7 @@ class GenericWebWorker {
                 var args = e.data.args.map(p => (p.type == 'fn') ? new Function(`return ${p.fn}`)() : p);
 
                 try {
-                    var result = await cb.apply(this, args); //If it is a promise or async function
+                    var result = await cb(...args);//.apply(this, args); //If it is a promise or async function
                     return postMessage(result)
 
                 } catch (e) { throw new Error(`CallbackError: ${e}`) }
