@@ -1,25 +1,95 @@
 <div id="aplicativo">
 	<h3 style="text-align: center;">
-		Calculo XNOR con Neuronal Networs
+		Logic Gates with Neuronal Networs
 	</h3>
-	<div class="row">
-		<div class="col-md-8">
-			<form ng-submit="calcular(factor, iteraciones)" style="text-align: left;">
-				<label class="col-2 col-form-label">Factor</label>
-		        <div class="col-10">
-					<input type="number" ng-model="factor" step="any" required>
-		        </div>
-				<label class="col-2 col-form-label">Iteraciones</label>
-		        <div class="col-10">
-					<input type="number" ng-model="iteraciones" min="200000" required>
-		        </div>
-		        <p></p>
-				<div class="col-2">
-					<button type="submit" class="btn btn-info">Generar</button>
-				</div>
+	<form ng-submit="calcular(factor, iteraciones, operacion)" class="container">
+	  <!--<div class="form-row">
+	    <div class="form-group col-md-6">
+	      <label for="inputEmail4">Email</label>
+	      <input type="email" class="form-control" id="inputEmail4" placeholder="Email">
+	    </div>
+	    <div class="form-group col-md-6">
+	      <label for="inputPassword4">Password</label>
+	      <input type="password" class="form-control" id="inputPassword4" placeholder="Password">
+	    </div>
+	  </div>-->
+	  <div class="form-row">
+	    <div class="form-group col-md-5">
+	      <label>Iteraciones</label>
+	      <input type="number" class="form-control" ng-model="iteraciones" min="200000" required>
+	    </div>
+	    <div class="form-group col-md-3">
+	      <label >Factor</label>
+	      <input type="number" class="form-control" ng-model="factor" step="any" required>
+	    </div>
+	    <div class="form-group col-md-4">
+	      <label >Operación</label>
+	      <select required="true" class="form-control" ng-change="cambiar_op(operacion)" ng-model="operacion" ng-required="true">
+	      	<option></option>
+	        <option>XNOR</option>
+	        <option>XOR</option>
+	        <option>AND</option>
+	      </select>
+	    </div>
+
+	  </div>
+	  <div class="form-row">
+	  	<div class="form-group col-md-2">
+		  	<button type="submit" class="btn btn-info">Aprender N.N.</button>
+	  	</div>
+	  </div>
+	  
+	</form>
+
+	<div ng-show="estimador">
+		<h4 style="text-align: center;">
+			Calculo estimado {{operacion_nombre}}
+		</h4>
+		<div class="container" >
+			<form id=estimar ng-submit="estimar(val1, val2)">
+			  <div class="form-row">
+			    <div class="form-group col-md-4">
+			      <label >Primer valor</label>
+			      <input placeholder="Ingrese un número" type="number" class="form-control" ng-model="val1" min="0" max="1" required>
+			    </div>
+			    <div class="form-group col-md-4">
+	    	 		<label >Segundo valor</label>
+			     	<input placeholder="Ingrese un múmero" type="number" class="form-control" ng-model="val2" min="0" max="1" required>
+			    </div>
+	    	    <div class="form-group col-md-4">
+			      <label >Aproximado</label>
+			      <input class="form-control" ng-model="resultado_estimar" disabled>
+			    </div>
+			  </div>
 			</form>
+		  	<div class="form-group col-md-10">
+			  	<button form="estimar" type="submit" class="btn btn-info">Estimar</button>
+		  	</div>
 		</div>
 	</div>
+
+
+	<!--<form ng-submit="calcular(factor, iteraciones)" style="text-align: left;">
+		<div class="form-row">
+			<div class="form-group col-md-5">
+				<input type="text" class="form-control" placeholder="First name">
+			</div>
+			<div class="form-group col-md-5">
+				<input type="text" class="form-control" placeholder="Last name">
+			</div>					
+		</div>
+		<label class="col-2 col-form-label">Factor</label>
+        <div class="col-10">
+			<input type="number" ng-model="factor" step="any" required>
+        </div>
+		<label class="col-2 col-form-label">Iteraciones</label>
+        <div class="col-10">
+			<input type="number" ng-model="iteraciones" min="200000" required>
+        </div>
+        <p></p>
+		<button type="submit" class="btn btn-info">Generar</button>
+	</form>-->
+	<p></p>
 	<p></p>
 	<div style="text-align: left;">
 		<h4 style="text-align: center;">

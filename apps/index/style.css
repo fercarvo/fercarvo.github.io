@@ -1,0 +1,373 @@
+/* Reset */
+
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,textarea,p,blockquote,th,td{margin:0;padding:0;}table{border-collapse:collapse;border-spacing:0;}fieldset,img{border:0;}address,caption,dfn,th,var{font-style:normal;font-weight:normal;}li{list-style:none;}caption,th{text-align:left;}h1,h2,h3,h4,h5,h6{font-size:100%;font-weight:normal;}
+
+
+@font-face {
+    font-family: 'socicon';
+    src: url('socicon/font/socicon-webfont.eot');
+    src: url('socicon/font/socicon-webfont.eot?#iefix') format('embedded-opentype'),
+         url('socicon/font/socicon-webfont.woff') format('woff'),
+         url('socicon/font/socicon-webfont.ttf') format('truetype'),
+         url('socicon/font/socicon-webfont.svg#sociconregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+    text-transform: initial;
+}
+
+
+.socicon {
+    font-family: 'socicon' !important;
+}
+
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    display: table;
+}
+
+
+
+
+
+body{
+margin:0;
+padding:0;
+color: #fff;
+position: relative;
+font-family: 'Merriweather', serif;
+text-align: center;
+}
+
+
+
+
+.wrapper{
+    text-align: center;
+    vertical-align: middle;
+    position: relative;
+}
+
+
+.abovebanner{
+	width: 100%;
+	float: left;
+	position: relative;
+	background: url(../images/background.jpg) center top no-repeat;
+	background-size: cover;
+	min-height: 499px;
+}
+
+.header{
+	width: 100%;
+	float: left;
+	display: table-cell;
+	margin: 140px 0 100px 0;
+}
+
+h1{
+	font-family: 'Lato', sans-serif;
+	font-size: 60px;
+	color: #fff;
+}
+
+h1 span{
+	color: #a7e09f;
+}
+
+p.line1{
+	font-size: 13px;
+	text-transform: uppercase;
+	letter-spacing: 3px;
+}
+
+
+.content{
+	width: 100%;
+	float: left;
+}
+
+.content p{
+	font-size: 14px;
+	letter-spacing: 1px;
+}
+
+.form{
+	width: 40%;
+	padding: 0 30%;
+	margin-top: 20px;
+	float: left;
+}
+
+.mainform{
+	border: 1px solid #8b7d73;
+-webkit-border-radius: 5px;
+-moz-border-radius: 5px;
+border-radius: 5px;	
+float: left;
+width: 100%;
+}
+
+.field input{
+	width: 58%;
+	font-family: 'Merriweather', serif;	
+	float: left;
+	background: none;
+	border: none;
+	font-size: 10px;
+	color: #fff;
+	letter-spacing: 1px;
+	text-transform: uppercase;
+	padding: 18px 3%;
+}
+
+.submit input{
+	width: 34%;
+	float: left;
+	background: #d4d0ce;
+	color: #433022;
+	border: none;
+	font-family: 'Merriweather', serif;
+	text-transform: uppercase;
+	letter-spacing: 2px;	
+	padding: 10px 0;
+	margin: 6px 1%;
+	font-size: 12px;
+	cursor: pointer;
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	border-radius: 2px;		
+}
+
+.submit:hover input{
+	background: #fff;
+}
+
+
+.belowbanner{
+	margin-top: 40px;
+	width: 100%;
+	float: left;
+}
+
+h2{
+	font-size: 12px;
+	color: white;
+	letter-spacing: 2px;
+	margin-bottom: 10px;
+}
+
+.email{
+	width: 32%;
+	float: left;
+	border-right: 1px solid #d3d1cf;
+	
+}
+
+.email a{
+	color: white;
+	font-size: 14px;
+	font-weight: 700;
+	text-transform: uppercase;
+	text-decoration: none;
+}
+
+email a:hover{
+	text-decoration: underline;
+}
+
+.social{
+	width: 32%;
+	float: left;
+	border-right: 1px solid #d3d1cf;
+}
+
+
+.social a{
+	margin: 0 15px;
+	color: white;
+	text-decoration: none;
+}
+
+.social a:hover{
+	opacity: 0.7;
+}
+
+.call{
+	width: 34%;
+	float: left;
+}
+
+.call p{
+	color: white;
+	font-weight: 700;
+	font-size: 14px;
+}
+
+
+
+@media only screen and (max-width: 1024px){
+
+
+.abovebanner{
+	min-height: 400px;
+}
+
+
+.header{
+	width: 100%;
+	float: left;
+	display: table-cell;
+	margin: 100px 0 80px 0;
+}
+
+
+.form{
+	width: 70%;
+	padding: 0 15%;
+	margin-top: 20px;
+	float: left;
+}
+
+
+
+.social a{
+	margin: 0 10px;
+	color: #433022;
+	text-decoration: none;
+}
+
+
+
+}
+
+
+
+
+@media only screen and (max-width: 768px){
+
+.abovebanner{
+	width: 100%;
+	float: left;
+	position: relative;
+	background: url(../images/background.jpg) center top no-repeat;
+	background-size: cover;
+	min-height: 360px;
+}
+
+	
+.header{
+	width: 100%;
+	float: left;
+	display: table-cell;
+	margin: 60px 0 60px 0;
+}
+
+h1{
+	font-family: 'Lato', sans-serif;
+	font-size: 50px;
+	color: #fff;
+}
+
+	
+p.line1{
+	font-size: 11px;
+	text-transform: uppercase;
+	letter-spacing: 1px;
+}
+
+
+.content{
+	width: 90%;
+	padding: 0 5%;
+}
+
+.content p{
+	font-size: 12px;
+	letter-spacing: 1px;
+}
+
+
+
+.form{
+	width: 80%;
+	padding: 0 10%;
+	margin-top: 20px;
+	float: left;
+}
+
+.mainform{
+	border: none;
+float: left;
+width: 100%;
+}
+
+.field input{
+		border: 1px solid #8b7d73;
+-webkit-border-radius: 5px;
+-moz-border-radius: 5px;
+border-radius: 5px;	
+	text-align: center;
+	width: 100%;
+	font-family: 'Merriweather', serif;	
+	float: left;
+	background: none;
+	font-size: 10px;
+	color: #fff;
+	letter-spacing: 1px;
+	text-transform: uppercase;
+	padding: 15px 0;
+}
+
+.submit input{
+	width: 100%;
+	float: left;
+	background: #d4d0ce;
+	color: #433022;
+	border: none;
+	font-family: 'Merriweather', serif;
+	text-transform: uppercase;
+	letter-spacing: 2px;	
+	padding: 10px 0;
+	margin: 6px 0;
+	font-size: 12px;
+	cursor: pointer;
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	border-radius: 2px;		
+}
+
+
+
+h2{
+	display: none;
+}
+
+
+
+.email, .social, .call{
+	width: 80%;
+	margin: 0 10%;
+	padding: 20px 0;
+	float: left;
+	border-right: none;
+	
+}
+
+.email, .social{
+		border-bottom: 1px solid #f4f4f3;
+
+}
+
+
+.belowbanner{
+	margin-top: 20px;
+}
+	
+	
+}
+
