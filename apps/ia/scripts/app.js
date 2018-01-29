@@ -2,15 +2,15 @@
     .config(["$stateProvider", "$compileProvider", function ($stateProvider, $compileProvider) {
         $stateProvider
             .state('documento', {
-                templateUrl: 'apps/ia/views/documento.html',
+                templateUrl: 'https://fercarvo.github.io/apps/ia/views/documento.html',
                 controller: 'documento'
             })
             .state('diapositiva', {
-                templateUrl: 'apps/ia/views/diapositiva.html',
+                templateUrl: 'https://fercarvo.github.io/apps/ia/views/diapositiva.html',
                 controller: 'diapositiva'
             })
             .state('aplicativo', {
-                templateUrl: 'apps/ia/views/aplicativo.html',
+                templateUrl: 'https://fercarvo.github.io/apps/ia/views/aplicativo.html',
                 controller: 'aplicativo'
             })     
     }])
@@ -45,6 +45,14 @@
 
             $scope.operacion_nombre = operacion
             waitingDialog.show('NN en curso, por favor espere');
+            
+            var timer = new Timer()    
+            timer.start({precision: 'secondTenths'});
+            timer.addEventListener('secondTenthsUpdated', function (e) {
+                 let t = timer.getTimeValues().toString(['minutes', 'seconds', 'secondTenths'])
+                 waitingDialog.message(`NN en curso, por favor espere ${t}`)
+            })
+
             console.time('Execution time')
             var output = operaciones[operacion]
             var worker = new GenericWebWorker(output, factor, iteraciones, Matrix, sigmoid, redNeuronal)
@@ -57,7 +65,10 @@
             waitingDialog.hide()
             $scope.resultado = res
             $scope.estimador = true
-            $scope.$apply()            
+            $scope.$apply()
+
+            timer.stop()
+            timer = null
             //console.log(res)
             console.timeEnd('Execution time')
             console.log('\n')
