@@ -31,8 +31,8 @@
                 </li>
                 
                 <li>
-                    <a href="" data-toggle="collapse" aria-expanded="false">Contactos</a>
-                    <ul class="collapse list-unstyled" id="autores">
+                    <a id="autores" aria-expanded="false">Contactos</a>
+                    <ul class="collapse list-unstyled" >
                         <li><a href="https://github.com/fercarvo" target="_blank">Edgar Fernando Carvajal</a></li>
                         <li><a href="" target="_blank">......</a></li>
                     </ul>
@@ -69,7 +69,7 @@
 
             <div class="footer">
                 <p class="text-center">Copyright 2018 &copy;</p>
-                <p class="text-center"><span>| </span>Edgar Carvajal <span> - </span> Joe Cruz <span> - </span> Marco Mendoza <span> |</span></p>
+                <p class="text-center"><span>| </span><a style="text-decoration: none;" href="https://fercarvo.github.io/" target="_blank" rel="noopener noreferrer">Edgar Carvajal</a><span> - </span> Joe Cruz <span> - </span> Marco Mendoza <span> |</span></p>
             </div>           
         </div>        
         <div class="overlay"></div>
@@ -103,6 +103,8 @@
             $('.collapse.in').toggleClass('in');
             $('a[aria-expanded=true]').attr('aria-expanded', 'false');
         });
+
+        $('#autores').on('click',()=> $(this).next('ul').toggle())
     })
 
     function loadTemplates($state, goState, $http, $templateCache) {
