@@ -1,4 +1,4 @@
-const Matrix = class {
+class Matrix {
     constructor (matrix, param) {
         if (matrix && Array.isArray(matrix) && matrix.length > 0) {
             this.rows = matrix.length
@@ -62,14 +62,14 @@ const Matrix = class {
     }
 }
 
-const sigmoid = function(matrix_A, flag = false, factor = 1, matrix = Matrix) {
-    if (flag)
+function sigmoid (matrix_A, derivada = false, factor = 1, matrix = Matrix) {
+    if (derivada)
         return matrix.eval(matrix_A, x => ((x*(1-x))*factor))          
     else
         return matrix.eval(matrix_A, x => 1/(1 + Math.exp(-x)))
 }
 
-const redNeuronal = function (valor_esperado, factor, iter = 500000, matrix = Matrix, sigmoid) {
+function redNeuronal (valor_esperado, factor, iter = 500000, matrix = Matrix, sm = sigmoid) {
     var entradas = [[0, 0], [0, 1], [1, 0], [1, 1]]
     valor_esperado = valor_esperado.map(n => [n]) //Transpuesta
     var layer_inputs;
@@ -89,14 +89,14 @@ const redNeuronal = function (valor_esperado, factor, iter = 500000, matrix = Ma
 
     for (var i = 0; i < iter; i++) {
         layer_inputs = entradas
-        w_hidden_layer = sigmoid(matrix.dot(layer_inputs, W1), false, factor, matrix)
-        w_out_layer = sigmoid(matrix.dot(w_hidden_layer, W2), false, factor, matrix)
+        w_hidden_layer = sm(matrix.dot(layer_inputs, W1), false, factor, matrix)
+        w_out_layer = sm(matrix.dot(w_hidden_layer, W2), false, factor, matrix)
 
         error_w_out_layer = matrix.subtract(valor_esperado, w_out_layer)
-        delta_w_out_layer = matrix.multiply(error_w_out_layer, sigmoid(w_out_layer, true, factor, matrix))
+        delta_w_out_layer = matrix.multiply(error_w_out_layer, sm(w_out_layer, true, factor, matrix))
 
         error_w_hidden_layer = matrix.dot(delta_w_out_layer, matrix.transpose(W2))
-        delta_w_hidden_layer = matrix.multiply(error_w_hidden_layer, sigmoid(w_hidden_layer, true, factor, matrix))
+        delta_w_hidden_layer = matrix.multiply(error_w_hidden_layer, sm(w_hidden_layer, true, factor, matrix))
 
         W1 = matrix.add( W1, matrix.dot( matrix.transpose(layer_inputs) , delta_w_hidden_layer ) )
         W2 = matrix.add( W2, matrix.dot( matrix.transpose(w_hidden_layer) , delta_w_out_layer ) )
@@ -104,8 +104,8 @@ const redNeuronal = function (valor_esperado, factor, iter = 500000, matrix = Ma
     return { W2, W1, w_out_layer }
 }
 
-const XNOR = function (val1, val2, res) {
-    var result1 = sigmoid( Matrix.dot( [[val1, val2]], res.W1 ) , false, 1)
-    var result2 = sigmoid( Matrix.dot(result1, res.W2), false, 1)
+function XNOR (val1, val2, res) {
+    var result1 = sigmoid( Matrix.dot( [[val1, val2]], res.W1 ) )
+    var result2 = sigmoid( Matrix.dot(result1, res.W2) )
     return result2[0][0]
 }
