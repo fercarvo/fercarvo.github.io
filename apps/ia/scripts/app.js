@@ -24,7 +24,8 @@
     }])
     .controller('aplicativo', ["$scope", function ($scope) {
 
-        var operaciones = { 
+        var operaciones = {
+            "notA and notB": [1,0,0,0], 
             AND: [0,0,0,1],
             XNOR: [1,0,0,1],
             XOR: [0,1,1,0]

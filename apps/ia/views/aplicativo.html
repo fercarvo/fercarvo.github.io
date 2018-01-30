@@ -17,8 +17,9 @@
 	      <select required="true" class="form-control" ng-change="cambiar_op(operacion)" ng-model="operacion" ng-required="true">
 	      	<option></option>
 	        <option>XNOR</option>
-	        <option>XOR</option>
+	        <option>notA and notB</option>
 	        <option>AND</option>
+	        <option>XOR</option>
 	      </select>
 	    </div>
 
@@ -74,7 +75,7 @@
 					<tbody>
 						<tr ng-repeat="fila in resultado.W1">
 							<td style="font-weight: bold;">h{{$index + 1}}</td>
-							<td ng-repeat='valor in fila'>W{{$index}}:&nbsp; {{valor | number : 5}}</td>
+							<td ng-repeat="valor in fila">W{{$index}}:&nbsp; {{valor | number : 5}}</td>
 						</tr>
 					</tbody>
 				</table>
@@ -90,7 +91,7 @@
 					<tbody>
 						<tr ng-repeat="fila in resultado.W2">
 							<td style="width: 10px; font-weight: bold;">W{{$index}}</td>
-							<td ng-repeat='valor in fila'>{{valor | number : 5}}</td>
+							<td ng-repeat="valor in fila">{{valor | number : 5}}</td>
 						</tr>
 					</tbody>
 				</table>
@@ -106,7 +107,7 @@
 					<tbody>
 						<tr ng-repeat="fila in resultado.w_out_layer">
 							<td style="width: 10px; font-weight: bold;">Out{{$index}}</td>
-							<td ng-repeat='valor in fila'>{{valor | number: 6}}</td>
+							<td ng-repeat="valor in fila">{{valor | number: 6}}</td>
 						</tr>
 					</tbody>
 				</table>
