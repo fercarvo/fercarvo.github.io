@@ -16,24 +16,29 @@ class GenericWebWorker {
     }
 
     //@param {function} cb, To be executed, the params must be the same number of passed in the constructor 
-    async exec(cb) {
-        if (typeof cb !== 'function')
-            throw new Error(`${cb} not a function`);
-        
-        var wk_string = this.worker.toString();
-        wk_string = wk_string.substring(wk_string.indexOf('{') + 1, wk_string.lastIndexOf('}'));            
-        var wk_link = window.URL.createObjectURL( new Blob([ wk_string ]) );
-        var wk = new Worker(wk_link);
+    exec(cb) {
+        return new Promise((resolve, reject)=> {
+            if (typeof cb !== 'function')
+                throw new Error(`${cb} not a function`);
 
-        wk.postMessage({ callback: cb.toString(), args: this.args });
- 
-        var res = await new Promise((next, error) => {
-            wk.onmessage = e => (e.data && e.data.error) ? error(e.data.error) : next(e.data);
-            wk.onerror = e => error(e.message);        
-        }).then(()=> { wk.terminate(), window.URL.revokeObjectURL(wk_link) })
-        .catch(()=> { wk.terminate(), window.URL.revokeObjectURL(wk_link) })
+            var wk_string = this.worker.toString();
+            wk_string = wk_string.substring(wk_string.indexOf('{') + 1, wk_string.lastIndexOf('}'));            
+            var wk_link = window.URL.createObjectURL( new Blob([ wk_string ]) );
+            var wk = new Worker(wk_link);
 
-        return res
+            wk.postMessage({ callback: cb.toString(), args: this.args });            
+            wk.onmessage = e => {
+                if (e.data && e.data.error) {
+                    reject(e.data.error), wk.terminate(), window.URL.revokeObjectURL(wk_link)
+                } else {
+                    resolve(e.data), wk.terminate(), window.URL.revokeObjectURL(wk_link)
+                }
+            };
+            
+            wk.onerror = e => {
+                reject(e.message), wk.terminate(), window.URL.revokeObjectURL(wk_link)
+            }; 
+        })        
     }
 
     //@param {function} cb, To be executed, the 1st argument is each element of the array
