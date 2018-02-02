@@ -32,7 +32,7 @@ class GenericWebWorker {
                 wk.onerror = e => error(e.message);        
             });            
             return res
-        } catch (e) { throw e } finally { wk.terminate(), window.URL.revokeObjectURL(wk_link) }
+        } catch (e) { throw e } finally { wk.terminate(); window.URL.revokeObjectURL(wk_link) }
     }
 
     //@param {function} cb, To be executed, the 1st argument is each element of the array
@@ -48,7 +48,7 @@ class GenericWebWorker {
                 var args = e.data.args.map(p => (p.type === 'fn') ? new Function(`return ${p.fn}`)() : p);
 
                 try {
-                    var result = await cb(...args)//If it is a promise or async function
+                    var result = await cb(...args);//If it is a promise or async function
                     return postMessage(result)
 
                 } catch (e) { throw `CallbackError: ${e}` }
