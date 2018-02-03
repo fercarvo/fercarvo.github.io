@@ -1,4 +1,4 @@
-﻿var socket = io.connect('http://localhost:3001', {'forceNew':true })
+﻿/*var socket = io.connect('http://localhost:3001', {'forceNew':true })
 
 socket.on("jpp", res => {
     var event = new CustomEvent(res.peticion, {detail: res})
@@ -7,7 +7,7 @@ socket.on("jpp", res => {
 
 socket.on("disconnect", ()=> {
     document.dispatchEvent(new Event("disconnect"))
-})
+})*/
 
 
 angular.module('app', ['ui.router', 'nvd3'])
@@ -123,7 +123,7 @@ angular.module('app', ['ui.router', 'nvd3'])
             .catch(e=> console.log(e))
     }])
     .controller('listener', ["$scope", "$state", function($scope, $state){
-        var socket_tweets = io.connect('http://localhost:3002', {'forceNew':true }); //tweets
+        /*var socket_tweets = io.connect('http://localhost:3002', {'forceNew':true }); //tweets
         $scope.tweets = [];
         socket_tweets.on('tweet', function (tweet) {
             if ($scope.tweets.length >= 25)
@@ -131,7 +131,7 @@ angular.module('app', ['ui.router', 'nvd3'])
             $scope.tweets = [tweet, ...$scope.tweets];
             $scope.$apply()
         })
-        $scope.$on('$destroy', ()=>  socket_tweets.close())
+        $scope.$on('$destroy', ()=>  socket_tweets.close())*/
     }])
     .controller('grafico', ["$scope", "$state", "data", '$rootScope', function ($scope, $state, data, $rootScope) {
         waitingDialog.hide()
