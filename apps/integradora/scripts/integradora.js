@@ -99,13 +99,13 @@ angular.module('app', ['ui.router', 'nvd3'])
             console.log(`\nCp1 ${contador[0].fecha}`)
             console.log(`Cp2 ${contador[1].fecha}`)
 
-            peticion = `${data.params.id1}/${data.params.id2}/${data.params.k}/${data.params.lambda}`;
+            //peticion = `${data.params.id1}/${data.params.id2}/${data.params.k}/${data.params.lambda}`;
             waitingDialog.show('Procesando corpus, por favor espere');
 
             try {
-                var res = await requestJPP(peticion, data.params);
-                data.resultado = res.data;
-                if (res.data.M)
+                var res = await getJPP(data.params.id1, data.params.id2, data.params.k, data.params.lambda);
+                data.resultado = res;
+                if (res.M)
                     return $state.go("grafico");
                 alert("No se ha obtenido la informacion correcta")
                 
@@ -113,14 +113,18 @@ angular.module('app', ['ui.router', 'nvd3'])
             finally { waitingDialog.hide() }             
         }
 
-        $http.get("apps/integradora/DB/corpus.json", { cache: true})
-            .then(res => {
-                $scope.data = res.data.filter(c => c.compressed);
-                $scope.data.forEach(corpus => {
-                    corpus.check = false
-                })
+        fetch(`https://fercarvo.github.io/apps/integradora/DB/corpus.json`)
+        .then(res => res.ok ? Promise.resolve(res.text()) : Promise.reject(res.statusText))
+        .then(data => {
+            $scope.data = JSON.parse(data).filter(c => c.compressed);
+            $scope.data.forEach(corpus => {
+                corpus.check = false
             })
-            .catch(e=> console.log(e))
+            $scope.$apply()
+            
+        })
+        .catch(e => console.log('Error corpus.json', e))
+
     }])
     .controller('listener', ["$scope", "$state", function($scope, $state){
         /*var socket_tweets = io.connect('http://localhost:3002', {'forceNew':true }); //tweets
