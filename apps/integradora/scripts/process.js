@@ -1,5 +1,5 @@
-function cleaner(string) {
-	const stopwords = [ "rt", "a", "actualmente","acuerdo","adelante","ademas","además","adrede","afirmó","agregó","ahi","ahora","ahí","al","algo","alguna","algunas","alguno","algunos","algún","alli","allí","alrededor","ambos","ampleamos","antano","antaño","ante","anterior","antes","apenas","aproximadamente","aquel","aquella","aquellas","aquello","aquellos","aqui","aquél","aquélla","aquéllas","aquéllos","aquí","arriba","arribaabajo","aseguró","asi","así","atras","aun","aunque","ayer","añadió","aún","b","bajo","bastante","bien","breve","buen","buena","buenas","bueno","buenos","c","cada","casi","cerca","cierta","ciertas","cierto","ciertos","cinco","claro","comentó","como","con","conmigo","conocer","conseguimos","conseguir","considera","consideró","consigo","consigue","consiguen","consigues","contigo","contra","cosas","creo","cual","cuales","cualquier","cuando","cuanta","cuantas","cuanto","cuantos","cuatro","cuenta","cuál","cuáles","cuándo","cuánta","cuántas","cuánto","cuántos","cómo","d","da","dado","dan","dar","de","debajo","debe","deben","debido","decir","dejó","del","delante","demasiado","demás","dentro","deprisa","desde","despacio","despues","después","detras","detrás","dia","dias","dice","dicen","dicho","dieron","diferente","diferentes","dijeron","dijo","dio","donde","dos","durante","día","días","dónde","e","ejemplo","el","ella","ellas","ello","ellos","embargo","empleais","emplean","emplear","empleas","empleo","en","encima","encuentra","enfrente","enseguida","entonces","entre","era","eramos","eran","eras","eres","es","esa","esas","ese","eso","esos","esta","estaba","estaban","estado","estados","estais","estamos","estan","estar","estará","estas","este","esto","estos","estoy","estuvo","está","están","ex","excepto","existe","existen","explicó","expresó","f","fin","final","fue","fuera","fueron","fui","fuimos","g","general","gran","grandes","gueno","h","ha","haber","habia","habla","hablan","habrá","había","habían","hace","haceis","hacemos","hacen","hacer","hacerlo","haces","hacia","haciendo","hago","han","hasta","hay","haya","he","hecho","hemos","hicieron","hizo","horas","hoy","hubo","i","igual","incluso","indicó","informo","informó","intenta","intentais","intentamos","intentan","intentar","intentas","intento","ir","j","junto","k","l","la","lado","largo","las","le","lejos","les","llegó","lleva","llevar","lo","los","luego","lugar","m","mal","manera","manifestó","mas","mayor","me","mediante","medio","mejor","mencionó","menos","menudo","mi","mia","mias","mientras","mio","mios","mis","misma","mismas","mismo","mismos","modo","momento","mucha","muchas","mucho","muchos","muy","más","mí","mía","mías","mío","míos","n","nada","nadie","ni","ninguna","ningunas","ninguno","ningunos","ningún","no","nos","nosotras","nosotros","nuestra","nuestras","nuestro","nuestros","nueva","nuevas","nuevo","nuevos","nunca","o","ocho","os","otra","otras","otro","otros","p","pais","para","parece","parte","partir","pasada","pasado","paìs","peor","pero","pesar","poca","pocas","poco","pocos","podeis","podemos","poder","podria","podriais","podriamos","podrian","podrias","podrá","podrán","podría","podrían","poner","por","porque","posible","primer","primera","primero","primeros","principalmente","pronto","propia","propias","propio","propios","proximo","próximo","próximos","pudo","pueda","puede","pueden","puedo","pues","q","qeu","que","quedó","queremos","quien","quienes","quiere","quiza","quizas","quizá","quizás","quién","quiénes","qué","r","raras","realizado","realizar","realizó","repente","respecto","s","sabe","sabeis","sabemos","saben","saber","sabes","salvo","se","sea","sean","segun","segunda","segundo","según","seis","ser","sera","será","serán","sería","señaló","si","sido","siempre","siendo","siete","sigue","siguiente","sin","sino","sobre","sois","sola","solamente","solas","solo","solos","somos","son","soy","soyos","su","supuesto","sus","suya","suyas","suyo","sé","sí","sólo","t","tal","tambien","también","tampoco","tan","tanto","tarde","te","temprano","tendrá","tendrán","teneis","tenemos","tener","tenga","tengo","tenido","tenía","tercera","ti","tiempo","tiene","tienen","toda","todas","todavia","todavía","todo","todos","total","trabaja","trabajais","trabajamos","trabajan","trabajar","trabajas","trabajo","tras","trata","través","tres","tu","tus","tuvo","tuya","tuyas","tuyo","tuyos","tú","u","ultimo","un","una","unas","uno","unos","usa","usais","usamos","usan","usar","usas","uso","usted","ustedes","v","va","vais","valor","vamos","van","varias","varios","vaya","veces","ver","verdad","verdadera","verdadero","vez","vosotras","vosotros","voy","vuestra","vuestras","vuestro","vuestros","w","x","y","ya","yo","z","él","ésa","ésas","ése","ésos","ésta","éstas","éste","éstos","última","últimas", "último", "últimos",
+function cleaner(string, stemmer) {
+	const stopwords = [ "ecuador", "rt", "a", "actualmente","acuerdo","adelante","ademas","además","adrede","afirmó","agregó","ahi","ahora","ahí","al","algo","alguna","algunas","alguno","algunos","algún","alli","allí","alrededor","ambos","ampleamos","antano","antaño","ante","anterior","antes","apenas","aproximadamente","aquel","aquella","aquellas","aquello","aquellos","aqui","aquél","aquélla","aquéllas","aquéllos","aquí","arriba","arribaabajo","aseguró","asi","así","atras","aun","aunque","ayer","añadió","aún","b","bajo","bastante","bien","breve","buen","buena","buenas","bueno","buenos","c","cada","casi","cerca","cierta","ciertas","cierto","ciertos","cinco","claro","comentó","como","con","conmigo","conocer","conseguimos","conseguir","considera","consideró","consigo","consigue","consiguen","consigues","contigo","contra","cosas","creo","cual","cuales","cualquier","cuando","cuanta","cuantas","cuanto","cuantos","cuatro","cuenta","cuál","cuáles","cuándo","cuánta","cuántas","cuánto","cuántos","cómo","d","da","dado","dan","dar","de","debajo","debe","deben","debido","decir","dejó","del","delante","demasiado","demás","dentro","deprisa","desde","despacio","despues","después","detras","detrás","dia","dias","dice","dicen","dicho","dieron","diferente","diferentes","dijeron","dijo","dio","donde","dos","durante","día","días","dónde","e","ejemplo","el","ella","ellas","ello","ellos","embargo","empleais","emplean","emplear","empleas","empleo","en","encima","encuentra","enfrente","enseguida","entonces","entre","era","eramos","eran","eras","eres","es","esa","esas","ese","eso","esos","esta","estaba","estaban","estado","estados","estais","estamos","estan","estar","estará","estas","este","esto","estos","estoy","estuvo","está","están","ex","excepto","existe","existen","explicó","expresó","f","fin","final","fue","fuera","fueron","fui","fuimos","g","general","gran","grandes","gueno","h","ha","haber","habia","habla","hablan","habrá","había","habían","hace","haceis","hacemos","hacen","hacer","hacerlo","haces","hacia","haciendo","hago","han","hasta","hay","haya","he","hecho","hemos","hicieron","hizo","horas","hoy","hubo","i","igual","incluso","indicó","informo","informó","intenta","intentais","intentamos","intentan","intentar","intentas","intento","ir","j","junto","k","l","la","lado","largo","las","le","lejos","les","llegó","lleva","llevar","lo","los","luego","lugar","m","mal","manera","manifestó","mas","mayor","me","mediante","medio","mejor","mencionó","menos","menudo","mi","mia","mias","mientras","mio","mios","mis","misma","mismas","mismo","mismos","modo","momento","mucha","muchas","mucho","muchos","muy","más","mí","mía","mías","mío","míos","n","nada","nadie","ni","ninguna","ningunas","ninguno","ningunos","ningún","no","nos","nosotras","nosotros","nuestra","nuestras","nuestro","nuestros","nueva","nuevas","nuevo","nuevos","nunca","o","ocho","os","otra","otras","otro","otros","p","pais","para","parece","parte","partir","pasada","pasado","paìs","peor","pero","pesar","poca","pocas","poco","pocos","podeis","podemos","poder","podria","podriais","podriamos","podrian","podrias","podrá","podrán","podría","podrían","poner","por","porque","posible","primer","primera","primero","primeros","principalmente","pronto","propia","propias","propio","propios","proximo","próximo","próximos","pudo","pueda","puede","pueden","puedo","pues","q","qeu","que","quedó","queremos","quien","quienes","quiere","quiza","quizas","quizá","quizás","quién","quiénes","qué","r","raras","realizado","realizar","realizó","repente","respecto","s","sabe","sabeis","sabemos","saben","saber","sabes","salvo","se","sea","sean","segun","segunda","segundo","según","seis","ser","sera","será","serán","sería","señaló","si","sido","siempre","siendo","siete","sigue","siguiente","sin","sino","sobre","sois","sola","solamente","solas","solo","solos","somos","son","soy","soyos","su","supuesto","sus","suya","suyas","suyo","sé","sí","sólo","t","tal","tambien","también","tampoco","tan","tanto","tarde","te","temprano","tendrá","tendrán","teneis","tenemos","tener","tenga","tengo","tenido","tenía","tercera","ti","tiempo","tiene","tienen","toda","todas","todavia","todavía","todo","todos","total","trabaja","trabajais","trabajamos","trabajan","trabajar","trabajas","trabajo","tras","trata","través","tres","tu","tus","tuvo","tuya","tuyas","tuyo","tuyos","tú","u","ultimo","un","una","unas","uno","unos","usa","usais","usamos","usan","usar","usas","uso","usted","ustedes","v","va","vais","valor","vamos","van","varias","varios","vaya","veces","ver","verdad","verdadera","verdadero","vez","vosotras","vosotros","voy","vuestra","vuestras","vuestro","vuestros","w","x","y","ya","yo","z","él","ésa","ésas","ése","ésos","ésta","éstas","éste","éstos","última","últimas", "último", "últimos",
 		"a's", //english from here
 		"able","about","above","according","accordingly","across","actually","after","afterwards","again","against","ain't","all","allow","allows","almost","alone","along","already","also","although","always","am","among","amongst","an","and","another","any","anybody","anyhow","anyone","anything","anyway","anyways","anywhere","apart","appear","appreciate","appropriate","are","aren't","around","as","aside","ask","asking","associated","at","available","away","awfully","b","be","became","because","become","becomes","becoming","been","before","beforehand","behind","being","believe","below","beside","besides","best","better","between","beyond","both","brief","but","by","c","c'mon","c's","came","can","can't","cannot","cant","cause","causes","certain","certainly","changes","clearly","co","com","come","comes","concerning","consequently","consider","considering","contain","containing","contains","corresponding","could","couldn't","course","currently","d","definitely","described","despite","did","didn't","different","do","does","doesn't","doing","don't","done","down","downwards","during","e","each","edu","eg","eight","either","else","elsewhere","enough","entirely","especially","et","etc","even","ever","every","everybody","everyone","everything","everywhere","ex","exactly","example","except","f","far","few","fifth","first","five","followed","following","follows","for","former","formerly","forth","four","from","further","furthermore","g","get","gets","getting","given","gives","go","goes","going","gone","got","gotten","greetings","h","had","hadn't","happens","hardly","has","hasn't","have","haven't","having","he","he's","hello","help","hence","her","here","here's","hereafter","hereby","herein","hereupon","hers","herself","hi","him","himself","his","hither","hopefully","how","howbeit","however","i","i'd","i'll","i'm","i've","ie","if","ignored","immediate","in","inasmuch","inc","indeed","indicate","indicated","indicates","inner","insofar","instead","into","inward","is","isn't","it","it'd","it'll","it's","its","itself","j","just","k","keep","keeps","kept","know","known","knows","l","last","lately","later","latter","latterly","least","less","lest","let","let's","like","liked","likely","little","look","looking","looks","ltd","m","mainly","many","may","maybe","me","mean","meanwhile","merely","might","more","moreover","most","mostly","much","must","my","myself","n","name","namely","nd","near","nearly","necessary","need","needs","neither","never","nevertheless","new","next","nine","no","nobody","non","none","noone","nor","normally","not","nothing","novel","now","nowhere","o","obviously","of","off","often","oh","ok","okay","old","on","once","one","ones","only","onto","or","other","others","otherwise","ought","our","ours","ourselves","out","outside","over","overall","own","p","particular","particularly","per","perhaps","placed","please","plus","possible","presumably","probably","provides","q","que","quite","qv","r","rather","rd","re","really","reasonably","regarding","regardless","regards","relatively","respectively","right","s","said","same","saw","say","saying","says","second","secondly","see","seeing","seem","seemed","seeming","seems","seen","self","selves","sensible","sent","serious","seriously","seven","several","shall","she","should","shouldn't","since","six","so","some","somebody","somehow","someone","something","sometime","sometimes","somewhat","somewhere","soon","sorry","specified","specify","specifying","still","sub","such","sup","sure","t","t's","take","taken","tell","tends","th","than","thank","thanks","thanx","that","that's","thats","the","their","theirs","them","themselves","then","thence","there","there's","thereafter","thereby","therefore","therein","theres","thereupon","these","they","they'd","they'll","they're","they've","think","third","this","thorough","thoroughly","those","though","three","through","throughout","thru","thus","to","together","too","took","toward","towards","tried","tries","truly","try","trying","twice","two","u","un","under","unfortunately","unless","unlikely","until","unto","up","upon","us","use","used","useful","uses","using","usually","uucp","v","value","various","very","via","viz","vs","w","want","wants","was","wasn't","way","we","we'd","we'll","we're","we've","welcome","well","went","were","weren't","what","what's","whatever","when","whence","whenever","where","where's","whereafter","whereas","whereby","wherein","whereupon","wherever","whether","which","while","whither","who","who's","whoever","whole","whom","whose","why","will","willing","wish","with","within","without","won't","wonder","would","wouldn't","x","y","yes","yet","you","you'd","you'll","you're","you've","your","yours","yourself","yourselves", "z","zero"
 	]
@@ -14,6 +14,7 @@ function cleaner(string) {
 		string = quitarAcentos(string)
 		var array = string.match(/\b(\w+)\b/g) //Se convierte string a array de palabras
 		array = array.filter(word => filterCheck(word))
+		array = array.map(word => stemmer(word))
 		//array = snowball.stemword(array, 'spanish') //Se realiza el stemming
 
 		if (array.length <= 4)
@@ -95,7 +96,6 @@ function cleanM(matrix) {
 function JPP (X, R, k, alpha, lambda, epsilon, maxiter, Matrix){
 
 	var dot = (A, B) => Matrix.dot(A, B)
-
 	var ComputeLoss = (X, W, H, M, R, reg_norm, reg_temp, trXX, I) => {
 		var WtW = dot(W.T, W)
 		var MR = dot(M, R)
@@ -110,7 +110,6 @@ function JPP (X, R, k, alpha, lambda, epsilon, maxiter, Matrix){
 
 		return Obj
 	}
-
 	var maxMatlab = (matrix, num) => matrix.eval(cel => (num > cel) ? num : cel);
 	var tr = (A, B) => A.multiply(B).sum;
 
@@ -141,24 +140,17 @@ function JPP (X, R, k, alpha, lambda, epsilon, maxiter, Matrix){
 
 
 	while ((Math.abs(prevObj-Obj) > epsilon) && (itNum <= maxiter)) {
-		J = Matrix.dot(M, R) // Multiplicacion matricial
+		J = dot(M, R) // Multiplicacion matricial
 
 		//W =  W .* ( M_1  ./ max(W*(M_2),eps) ); % eps = 2^(-52)
-		//console.log("dot to go", X, H.T.add(J.T))
-		W_1 = Matrix.dot(X, H.T.add(J.T))//X*(H'+J')
-		//console.log("\n...asdasdasdasdasd....W_1", W_1.data, "\n\n")
-		W_2 = ( ( Matrix.dot(J, J.T)).add( Matrix.dot(H, H.T)) ).add(lambda)   //((J*J')+(H*H')+ lambda) //
-		//console.log("W", W)
-		//console.log("\n...asdasdasdasdasd....W_2", W_2, "\n\n")
-
-		W_3 = Matrix.dot(W, W_2)
-		//console.log("\n...asdasdasdasdasd....W_3", W_3, "\n\n")
+		W_1 = dot(X, H.T.add(J.T))//X*(H'+J')
+		W_2 = ( ( dot(J, J.T)).add( dot(H, H.T)) ).add(lambda)   //((J*J')+(H*H')+ lambda) //
+		W_3 = dot(W, W_2)
 		W_4 = maxMatlab(W_3, eps) //////////////////////////////////////////
-		//console.log("\n...asdasdasdasdasd....W_4", W_4, "\n\n")
 		W = W.multiply( W_1.divide( W_4 ))
 
-		WtW = Matrix.dot( W.T , W)//W'*W
-		WtX = Matrix.dot( W.T, X) //W'*X;
+		WtW = dot( W.T , W)//W'*W
+		WtX = dot( W.T, X) //W'*X;
 
 		//M = M .* ( ((WtX*R') + (alpha*I)) ./ max( (WtW*M*R*R') + ( (alpha)*M)+lambda,eps) );
 		M_1 = ( dot(WtX, R.T) ).add( I.multiply(alpha))   //(WtX*R') + (alpha*I)
@@ -181,11 +173,7 @@ function JPP (X, R, k, alpha, lambda, epsilon, maxiter, Matrix){
 		itNum++
 	}
 
-	return { 
-		W: W.data,
-		H: H.data,
-		M: M.data 
-	}
+	return { W: W.data, H: H.data, M: M.data }
 
 	//Verifica que una matriz no tenga valores diferentes de numeros
 	function cleanM(matrix) {
@@ -252,23 +240,18 @@ class Matrix {
 	}*/
 
 
-    /*static dot (A, B, flag) {
-    	var cont = 0
+    /*static dot (A, B) {
         var result = new Array(A.rows);
         for (var r = 0; r < A.rows; r++) {
             result[r] = new Array(B.columns).fill(0)
             for (var c = 0; c < B.columns; c++) {
-                for (var i = 0; i < A.columns; i++) {
-                    result[r][c] += A.data[r][i] * B.data[i][c];
-                    if (r === 0 && c === 0 && flag) {
-                    	if ( (cont%1000) === 0 )
-                    		console.log(result[r][c], r, c,cont);
-                    	cont++
-                	}              
-                }
+            	let suma = 0
+                for (var i = 0; i < A.columns; i++)
+                    suma += A.data[r][i] * B.data[i][c];             
+                
+                result[r][c] = suma
             }
         }
-        console.log("result 0 0", result[0][0])
         return new Matrix(result)
     }*/
 
@@ -357,10 +340,8 @@ class Matrix {
 }
 
 
-function cp_tfidf (data) {
-	var X = data.setPalabras.reduce((arr, word) => [...arr, tf_idf2(data.corpus, word)], []);
-
-	return X;
+function cp_tfidf (setPalabras, corpus) {
+	return setPalabras.reduce((arr, word) => [...arr, tf_idf2(corpus, word)], []);
 
 	// corpus = [{word: frecuency}]
 	function tf_idf (corpus, word) {	
@@ -372,38 +353,49 @@ function cp_tfidf (data) {
 	}
 
 	function tf_idf2 (corpus, word) {
-		var tf = (doc, word) => 0.5 + ((0.5*(doc.map[word] ? doc.map[word] : 0))/doc.values);
-		var nt = corpus.reduce((nt, doc)=> doc.map[word] ? ++nt : nt ,1)
+		var tf = (doc, word) => 0.5 + ((0.5*(doc.map.get(word) ? doc.map.get(word) : 0))/doc.values);
+		var nt = corpus.reduce((nt, doc)=> doc.map.get(word) ? ++nt : nt ,1)
 		var idf = Math.log(1 + (corpus.length / nt))
 		return corpus.reduce((xT, doc) => [...xT, tf(doc, word)*idf], [])
 	}
 }
 
-function cp_corpus(documentos, cleaner) {
+function cp_corpus(documentos, cleaner, Snowball) {
+	const stemmer = steam()
 	var corpus = [] // [Map] new Map("word", frecuency)
 	var setPalabras = new Set() //Palabras sin repetir del corpus
 
 	documentos.forEach(doc =>{
 		var valuesDoc = new Set()
-		var map = {}
-		var docWords = doc.tweets.reduce((words, t) => [...words, ...cleaner(t) ], []) //Todas las palabras del doc
+		var map = new Map()
+		var docWords = doc.tweets.reduce((words, t) => [...words, ...cleaner(t, stemmer) ], []) //Todas las palabras del doc
 
-		docWords.forEach(word => {
-			if (word in map)
-				map[word]++
+		for (let word of docWords) {
+			let frec = map.get(word) 
+			if (frec === undefined)
+				map.set(word, 1)
 			else
-				map[word] = 1
-		})
-
-		for (var key in map) {
-			setPalabras.add(key);
-			valuesDoc.add(map[key])
+				map.set(word, ++frec)
 		}
+
+		map.forEach((value, key) => {
+			setPalabras.add(key);
+			valuesDoc.add(value)
+		})
 
 		corpus.push({map, values: [...valuesDoc].sort().pop()})
 	})
 	setPalabras = [...setPalabras]
-	return {setPalabras, corpus}		
+	return {setPalabras, corpus}
+
+	function steam () {
+		const stemmer = new Snowball("spanish")
+		return function (word) {
+			stemmer.setCurrent(word);
+			stemmer.stem();
+			return stemmer.getCurrent();
+		}
+	}		
 }
 
 async function getCorpus(id) {
@@ -428,41 +420,35 @@ async function getJPP(corpus1, corpus2, k = 5, lambda = 0.01) {
 
     var setPalabras = [...new Set([...data_1.setPalabras, ...data_2.setPalabras]) ]
 
-	var X_1 = []
-	var X_2 = []
+    console.log("Numero palabras", setPalabras.length)
+    console.time("X Process")
 
-	var p1 = new GenericWebWorker({setPalabras, corpus: data_1.corpus}, cp_tfidf, Matrix)
-		.exec((data, tfidf, Matrix) => {
-			var X = tfidf(data);
-			return new Matrix(X).T.data
-		});
+	var p1 = new GenericWebWorker(setPalabras, data_1.corpus, cp_tfidf, Matrix)
+		.exec((set, corp, tfidf, Matrix) => new Matrix( tfidf(set, corp) ).T.data);
 
-	var p2 = new GenericWebWorker({setPalabras, corpus: data_2.corpus}, cp_tfidf, Matrix)
-		.exec((data, tfidf, Matrix) => {
-			var X = tfidf(data);
-			return new Matrix(X).T.data
-		});
+	var p2 = new GenericWebWorker(setPalabras, data_2.corpus, cp_tfidf, Matrix)
+		.exec((set, corp, tfidf, Matrix) => new Matrix( tfidf(set, corp) ).T.data);
 
 	try {
 		var X = await Promise.all([p1, p2])
 
-		var worker = new GenericWebWorker(k, alpha, lambda, epsilon, maxiter, X[0], X[1], JPP, Matrix, extraerDocTopicos, cleanM, data_1, data_2)
-		var data = await worker.exec((k, alpha, lambda, epsilon, maxiter, X_1, X_2, JPP, Matrix, extraerDocTopicos, cleanM, data_1, data_2) => {
+		console.timeEnd("X Process")
+
+		var worker = new GenericWebWorker(k, alpha, lambda, epsilon, maxiter, X[0], X[1], JPP, Matrix, extraerDocTopicos, data_1, data_2)
+		var data = await worker.exec((k, alpha, lambda, epsilon, maxiter, X_1, X_2, JPP, Matrix, extraerDocTopicos, data_1, data_2) => {
 			var r_1 = Matrix.random(k, X_1[0].length ).data
+
+			console.time("JPP")
 			var jpp_1 = JPP(X_1, r_1, k, alpha, lambda, epsilon, maxiter, Matrix)
-
-			console.log("jpp1", jpp_1)
-
 			var jpp_2 = JPP(X_2, jpp_1.H, k, alpha, lambda, epsilon, maxiter, Matrix)
+			console.timeEnd("JPP")
 
-			console.log("jpp_2", jpp_2)
+			console.time("Topicos")
+			var topicos_1 = extraerDocTopicos( jpp_1.W, data_1.corpus, Matrix)
+			var topicos_2 = extraerDocTopicos( jpp_2.W, data_2.corpus, Matrix)
+			console.timeEnd("Topicos")
 
-			var topicos_1 = extraerDocTopicos( cleanM( jpp_1.W ), data_1.corpus, Matrix)
-			console.log("Topico 1")
-			var topicos_2 = extraerDocTopicos( cleanM( jpp_2.W ), data_2.corpus, Matrix)
-			var result = {M: jpp_2.M, topicos_1, topicos_2};
-			console.log("result", result)
-			return result
+			return {M: jpp_2.M, topicos_1, topicos_2};
 		})
 
 		console.log("Data after worker", data)
@@ -496,7 +482,7 @@ async function getJPP(corpus1, corpus2, k = 5, lambda = 0.01) {
 		return to_doc.map(topico => {
 			topico = topico.map(index_doc => corpus[index_doc].map)
 			topico = topico.map(doc => {
-				doc = Object.entries(doc).sort((a, b)=> b[1]-a[1]) //[ ['perro', 233], ['gato', 9] ]
+				doc = [...doc.entries()].sort((a, b)=> b[1]-a[1]) //[ ['perro', 233], ['gato', 9] ]
 				return doc.slice(0, 7).map(obj => obj[0]) //['perro', 'gato', 'caballo']
 			})
 			topico = topico.reduce((arr, doc_arr)=> [...arr, ...doc_arr], [])
@@ -507,9 +493,9 @@ async function getJPP(corpus1, corpus2, k = 5, lambda = 0.01) {
 
 async function getX(corpus_id) {
 	var documentos = await getCorpus(corpus_id);
-	var worker = new GenericWebWorker(documentos, cp_corpus, cleaner)
-	var data = await worker.exec((documentos, cp_corpus, cleaner) => {
-		return cp_corpus(documentos, cleaner)
+	var worker = new GenericWebWorker(documentos, cp_corpus, cleaner, Snowball)
+	var data = await worker.exec((documentos, cp_corpus, cleaner, Snowball) => {
+		return cp_corpus(documentos, cleaner, Snowball)
 	})
 
 	return data
