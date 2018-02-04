@@ -46,14 +46,15 @@
         }
         return data
     }])
-    .controller('dias', ["$scope", "$state", "$http", "data", function($scope, $state, $http, data){
-        data.resultado = null
+    .controller('dias', ["$scope", "$state", "$http", "data", "$rootScope", function($scope, $state, $http, data, $rootScope){
+        //data.resultado = null
         var peticion = ""
         var contador = []
-        $scope.disable = null
-        $scope.check = null
+        //$scope.disable = null
+        //$scope.check = null
         $scope.k = 5
         $scope.lambda = 0.001
+        $scope.alpha = 0.1
 
         $scope.calculo = function (corpus) {
             if (contador.length < 2) {
@@ -94,9 +95,13 @@
             //peticion = `${data.params.id1}/${data.params.id2}/${data.params.k}/${data.params.lambda}`;
             waitingDialog.show('Procesando corpus, por favor espere');
 
+
             try {
                 var res = await getJPP(data.params.id1, data.params.id2, data.params.k, data.params.lambda);
                 data.resultado = res;
+                $rootScope.fechaDia1 = contador[0].fecha;
+                $rootScope.fechaDia2 = contador[1].fecha;
+
                 if (res.M)
                     return $state.go("grafico");
                 alert("No se ha obtenido la informacion correcta")
@@ -131,6 +136,9 @@
         $scope.$on('$destroy', ()=>  socket_tweets.close())
     }])
     .controller('grafico', ["$scope", "$state", "data", '$rootScope', function ($scope, $state, data, $rootScope) {
+        
+        $scope.matrix = function() { $state.go('grafico.matrix') }
+
         waitingDialog.hide()
         $state.go('grafico.matrix')
         var M = [...data.resultado.M]
@@ -158,7 +166,9 @@
                 $state.reload('grafico.barras')
         }
     }])
-    .controller('grafico.matrix', ["$scope", "$state", "data", function ($scope, $state, data){
+    .controller('grafico.matrix', ["$scope", "$state", "data", "$rootScope", function ($scope, $state, data, $rootScope){
+
+        $rootScope.leyendaGrafico = "Mapa de calor de la matriz M por periodos"
 
         if (!data.resultado)
             return $state.go("dias")
@@ -179,9 +189,9 @@
                 marginBottom: 45,
                 plotBorderWidth: 1
             },
-            title: {
+            title: null,/*{
                 text: 'Mapa de calor de la matriz M por periodos'
-            },
+            }*/
             xAxis: { categories: topicosX },
             yAxis: { categories: topicosY },
             colorAxis: {
@@ -214,9 +224,9 @@
             }]
         })
     }])
-    .controller('grafico.barras', ["$scope", "$state", "data", function ($scope, $state, data){
-        $scope.leyenda = data.grafico2.nombre
-        $scope.matrix = function() { $state.go('grafico.matrix') }
+    .controller('grafico.barras', ["$scope", "$state", "data", "$rootScope", function ($scope, $state, data, $rootScope){
+        $rootScope.leyendaGrafico = data.grafico2.nombre
+        //$scope.leyenda = data.grafico2.nombre
         $scope.$on('change-grafico', function() { $state.reload(), console.log('reloading...') })
 
         $scope.options = {

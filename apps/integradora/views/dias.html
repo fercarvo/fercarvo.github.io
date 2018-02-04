@@ -1,53 +1,66 @@
+<div>
+  <h3 style="text-align: center;">
+    Parámetros de entrada
+  </h3>
 
-<div class="row">
-    <h4>Seleccione los días</h4>
-    <div id="calendario"></div>
-  
-</div>
+  <form ng-submit="generar(k, lambda)" class="container">
+    <div class="form-row">
+      <div class="form-group col-md-4">
+        <label>Número de tópicos (K)</label>
+        <input title="Número de tópicos a extraer por cada corpus" type="number" class="form-control" ng-model="k" min="1" max="8" required>
+      </div>
 
-<div class="row">
-  <div class="col-md-2"></div>
-  <div class="col-md-8">
-    <form id="generar" ng-submit="generar(k, lambda)">
-      <div class="form-group row">
-        <label for="topicos" class="col-2 col-form-label">k tópicos</label>
-        <div class="col-10">
-          <input ng-model="k" min="1" max="8" required type="number">
-        </div>
+      <div class="form-group col-md-4">
+        <label >Lambda</label>
+        <input type="number" class="form-control" ng-model="lambda" disabled required>
       </div>
-      <div hidden class="form-group row">
-        <label for="lambda" class="col-2 col-form-label">lambda</label>
-        <div class="col-10">
-          <input ng-model='lambda' step=".0001" min="0" min="100" required type="number">
-        </div>
+
+      <div class="form-group col-md-4">
+        <label >Alpha</label>
+        <input type="number" class="form-control" ng-model="alpha" disabled required>
       </div>
-      <div class="row">
-        <button type="submit" class="btn btn-info">Generar</button>
-        <button type="button" ng-click="cancelar()" class="btn btn-info">Limpiar</button>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group col-md-8">
+        <button type="submit" class="btn btn-primary">Generar</button>
+        <button type="button" ng-click="cancelar()" class="btn btn">Cancelar</button>
       </div>
-    </form>
-    <table class="table">
-      <thead>
-        <tr>
-          <th class="text-center" scope="col">ID</th>
-          <th class="text-center" scope="col">Fecha</th>
-          <th class="text-center" scope="col">Seleccionar</th>
-        </tr>
-      </thead>
-    
-      <tbody>
-        <tr ng-repeat="c in data | orderBy : ['fecha']">
-          <th class="text-center">corpus {{$index + 1}}</th>
-          <td class="text-center">{{c.fecha | date: 'dd-MM-yyyy HH:mm' : 'UTC'}}</td>
-          <td class="text-center">
-            <input form="despacharForm" ng-disabled="disable" ng-checked="c.check" type="checkbox" ng-click="calculo(c)">
-            <br>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    
+    </div>
+  </form>
+
+  <p></p>
+  <p></p>
+  <div style="text-align: left;">
+   
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Seleccione dos corpus a procesar</h3>
+      </div>
+      <div class="panel-body">
+        <table class="table table-hover table-bordered">
+          <thead >
+            <tr class="active">
+              <th >ID</th>
+              <th >Fecha</th>
+              <th class="text-center">Seleccionar</th>
+            </tr>
+          </thead>
+        
+          <tbody>
+            <tr ng-repeat="c in data | orderBy : ['fecha']">
+              <th >corpus {{$index + 1}}</th>
+              <td >{{c.fecha | date: 'dd-MM-yyyy' : 'UTC'}}</td>
+              <td class="text-center">
+                <input form="despacharForm" ng-disabled="disable" ng-checked="c.check" type="checkbox" ng-click="calculo(c)">
+                <br>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+
+      </div>      
+    </div>
+
   </div>
-  <div class="col-md-2"></div>
-</div>
-
