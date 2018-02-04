@@ -1,16 +1,4 @@
-﻿/*var socket = io.connect('http://localhost:3001', {'forceNew':true })
-
-socket.on("jpp", res => {
-    var event = new CustomEvent(res.peticion, {detail: res})
-    document.dispatchEvent(event)
-})
-
-socket.on("disconnect", ()=> {
-    document.dispatchEvent(new Event("disconnect"))
-})*/
-
-
-angular.module('app', ['ui.router', 'nvd3'])
+﻿angular.module('app', ['ui.router', 'nvd3'])
     .config(["$stateProvider", "$compileProvider", function ($stateProvider, $compileProvider) {
         $stateProvider
             .state('home', {
@@ -36,7 +24,11 @@ angular.module('app', ['ui.router', 'nvd3'])
             .state('listener', {
                 templateUrl: 'apps/integradora/views/stream.html',
                 controller: 'listener'
-            })        
+            })
+            .state('documento', {
+                templateUrl: 'apps/integradora/views/documento.html',
+                controller: 'documento'
+            })          
     }])
     .run(["$state", "$http", "$templateCache", function ($state, $http, $templateCache) {
         loadTemplates($state, "dias", $http, $templateCache)
@@ -127,7 +119,8 @@ angular.module('app', ['ui.router', 'nvd3'])
 
     }])
     .controller('listener', ["$scope", "$state", function($scope, $state){
-        /*var socket_tweets = io.connect('http://localhost:3002', {'forceNew':true }); //tweets
+        console.log("Este controlador funciona solo con conexiones localhost")
+        var socket_tweets = io.connect('http://localhost:3002', {'forceNew':true }); //tweets
         $scope.tweets = [];
         socket_tweets.on('tweet', function (tweet) {
             if ($scope.tweets.length >= 25)
@@ -135,7 +128,7 @@ angular.module('app', ['ui.router', 'nvd3'])
             $scope.tweets = [tweet, ...$scope.tweets];
             $scope.$apply()
         })
-        $scope.$on('$destroy', ()=>  socket_tweets.close())*/
+        $scope.$on('$destroy', ()=>  socket_tweets.close())
     }])
     .controller('grafico', ["$scope", "$state", "data", '$rootScope', function ($scope, $state, data, $rootScope) {
         waitingDialog.hide()
@@ -270,33 +263,6 @@ angular.module('app', ['ui.router', 'nvd3'])
     .controller("home", [function () {
 
     }])
+    .controller('documento', [function(){
 
-
-//Key, es el id de suscripcion
-//data, información a enviador
-function requestJPP (peticion, data) {
-    return new Promise((resolve, reject)=> {
-
-        if (socket.disconnected)
-            return reject("Server disconnected")
-
-        function response (e) {     
-            var res = e.detail
-            if (res.error)
-                return reject(res.error)
-            document.removeEventListener(peticion, response)
-            document.removeEventListener("disconnect", disconnect)
-            resolve(res)
-        }
-
-        function disconnect () {
-            document.removeEventListener(peticion, response)
-            document.removeEventListener("disconnect", disconnect)
-            reject("Server disconnected")
-        }
-
-        socket.emit("jpp", {peticion, data})
-        document.addEventListener(peticion, response, false)
-        document.addEventListener("disconnect", disconnect, false)
-    })
-}
+    }])

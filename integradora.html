@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Visualización</title>
     
@@ -24,6 +25,9 @@
             </div>
 
             <ul class="list-unstyled components">
+                <li ui-sref="documento">
+                    <a href="">Documentación</a>
+                </li>
                 <li ui-sref="listener">
                     <a href="">Streamming de tweets</a>
                 </li>
@@ -63,6 +67,7 @@
                     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                         <ul class="nav navbar-nav navbar-right">
                             <li ui-sref="home"><a href="">Principal</a></li>
+                            <li ui-sref="documento"><a href="">Documentación</a></li>
                             <li ui-sref="dias"><a href="">Corpus</a></li>
                             <li ui-sref="listener"><a href="">Listener</a></li>
                             <li ui-sref="grafico"><a href="">Gáfico</a></li>
@@ -141,7 +146,6 @@
     })
 
     function loadTemplates($state, goState, $http, $templateCache) {
-
         var promises = []
         var states = $state.get()
 
