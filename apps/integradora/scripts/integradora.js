@@ -9,6 +9,10 @@
                 templateUrl: 'apps/integradora/views/corpus.html',
                 controller: 'corpus'
             })
+            .state('archivos', {
+                templateUrl: 'apps/integradora/views/archivos.html',
+                controller: 'archivos'
+            })
             .state('grafico', {
                 templateUrl: 'apps/integradora/views/grafico.html',
                 controller: 'grafico'
@@ -31,7 +35,7 @@
             })          
     }])
     .run(["$state", "$http", "$templateCache", function ($state, $http, $templateCache) {
-        loadTemplates($state, "corpus", $http, $templateCache)
+        loadTemplates($state, "archivos", $http, $templateCache)
     }])
     .factory("data", [function(){
         var data = {
@@ -48,9 +52,98 @@
     }])
     .controller("archivos", ["$scope", "$state", "data", "$rootScope", function($scope, $state, data, $rootScope){
 
+        var peticion = ""
+        var corpus1 = null;
+        var corpus2 = null;
+        $scope.k = 5
+        $scope.lambda = 0.001
+        $scope.alpha = 0.1
+        $scope.tfidf = "log"
+        $scope.topicos = "terminos"
+
+        $scope.corpus1 = {}
+        $scope.corpus2 = {}
+
+        document.getElementById('corpus1').onchange = evt => {
+            var file = evt.target.files[0];
+            $scope.corpus1.type = file.type || "n/n"
+            $scope.corpus1.size = file.size
+            $scope.corpus1.show = true
+            $scope.$apply()
+
+            if (file.type !== "application/json") {
+                document.getElementById('corpus1').value = ""
+                $scope.corpus1.show = false
+                $scope.$apply()
+                return alert("Por favor ingrese un archivo json")
+            }
+
+            var reader = new FileReader();
+
+            reader.onload = () => {
+                try {
+                    corpus1 = JSON.parse(reader.result)
+                    console.log("Corpus1 length", corpus1.length)
+                } catch (e) {
+                    console.log("Error leer archivo", e)
+                    alert("Archivo no valido, por favor ingrese uno con el formato JSON adecuado")
+                }
+            }
+
+            reader.readAsText(file);
+        }
+
+        document.getElementById('corpus2').onchange = evt => {
+            var file = evt.target.files[0];
+            $scope.corpus2.type = file.type || "n/n"
+            $scope.corpus2.size = file.size
+            $scope.corpus2.show = true
+            $scope.$apply()
+
+            if (file.type !== "application/json") {
+                document.getElementById('corpus2').value = ""
+                $scope.corpus2.show = false
+                $scope.$apply()
+                return alert("Por favor ingrese un archivo json")
+            }
+
+            var reader = new FileReader();
+
+            reader.onload = () => {
+                try {
+                    corpus2 = JSON.parse(reader.result)
+                    console.log("Corpus2 length", corpus2.length)
+                } catch (e) {
+                    console.log("Error leer archivo", e)
+                    alert("Archivo no valido, por favor ingrese uno con el formato JSON adecuado")
+                }
+            }
+
+            reader.readAsText(file);
+        }
+
+        $scope.generar = async function (k, lambda, tfidf, topicos) {
+
+            data.params.k = k
+            data.params.lambda = lambda
+
+            //peticion = `${data.params.id1}/${data.params.id2}/${data.params.k}/${data.params.lambda}`;
+            waitingDialog.show('Procesando corpus, por favor espere');
 
 
+            try {
+                var res = await getJPP(corpus1, corpus2, data.params.k, data.params.lambda, tfidf, topicos);
+                data.resultado = res;
+                $rootScope.fechaDia1 = "Sin fecha";
+                $rootScope.fechaDia2 = "Sin fecha";
 
+                if (res.M)
+                    return $state.go("grafico");
+                alert("No se ha obtenido la informacion correcta")
+                
+            } catch (e) { alert(`Error: ${e}`) }
+            finally { waitingDialog.hide() }             
+        }
 
     }])
     .controller('corpus', ["$scope", "$state", "$http", "data", "$rootScope", function($scope, $state, $http, data, $rootScope){

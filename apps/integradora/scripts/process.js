@@ -386,6 +386,10 @@ function cp_corpus(documentos, cleaner, Snowball) {
 	documentos.forEach(doc =>{
 		var valuesDoc = new Set()
 		var map = new Map()
+
+		if (!doc.tweets)
+			doc.tweets = doc.text
+
 		var docWords = doc.tweets.reduce((words, t) => [...words, ...cleaner(t, stemmer) ], []) //Todas las palabras del doc
 
 		for (let word of docWords) {
@@ -520,7 +524,13 @@ async function getJPP(corpus1, corpus2, k = 5, lambda = 0.01, tfidf = "log", top
 }
 
 async function getX(corpus_id) {
-	var documentos = await getCorpus(corpus_id);
+	var documentos;
+
+	if (Array.isArray(corpus_id))
+		documentos = corpus_id;
+	else
+		documentos = await getCorpus(corpus_id);
+
 	var worker = new GenericWebWorker(documentos, cp_corpus, cleaner, Snowball)
 	var data = await worker.exec((documentos, cp_corpus, cleaner, Snowball) => {
 		return cp_corpus(documentos, cleaner, Snowball)

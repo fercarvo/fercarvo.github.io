@@ -1,0 +1,68 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+      <h4 class="panel-titlle" style="text-align: center;"> Procesamiento desde archivos JSON </h4>
+  </div>
+
+  <div class="panel-body">
+    <p style="color: black;"> En la siguiente sección el usuario puede ingresar y procesar dos corpus provenientes de archivos .json; el formato debe será un arreglo de objetos (documentos), en el que cada uno tendŕa una única propiedad llamada texto, la cual tendŕa arreglo de strings. <a style="color: blue; text-decoration: underline;" target="_blank" rel="noopener noreferrer" href="https://fercarvo.github.io/apps/integradora/DB/corpus/prueba_corpus.json">ejemplo.json</a> </p>
+  </div>
+
+  <div class="panel-body">
+      <form ng-submit="generar(k, lambda, tfidf, topicos)" id="formArchivos" class="container">
+        <div class="form-row">
+          <div class="form-group col-md-4">
+            <label>Número de tópicos (K)</label>
+            <input title="Número de tópicos a extraer por cada corpus" type="number" class="form-control" ng-model="k" min="1" max="8" required>
+          </div>
+
+          <div class="form-group col-md-4">
+            <label >Lambda</label>
+            <input type="number" min="0" step="0.0001" class="form-control" ng-model="lambda" required>
+          </div>
+
+          <div class="form-group col-md-4">
+            <label >Alpha</label>
+            <input type="number" min="0" step="0.0001" class="form-control" ng-model="alpha" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label>Método TF-IDF</label>
+            <select title="Tipo de cálculo del TF-IDF" class="form-control" ng-model="tfidf" required>
+              <option value="log" selected>Normalización logaritmica</option>
+              <option value="double">Doble normalización 0.5</option>
+            </select>
+          </div>
+
+          <div class="form-group col-md-6">
+            <label >Extraer tópicos desde</label>
+            <select title="Método de extracción de tópicos" class="form-control" ng-model="topicos" required>
+              <option value="terminos">Matriz tópico terminos</option>
+              <option value="documentos" selected>Matriz documento tópicos</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label>Corpus 1</label>
+            <input type="file" title="Archivo JSON del corpus día 1" id="corpus1" required>
+            <output ng-show="corpus1.show"> <strong> {{corpus1.type}} - {{corpus1.size/1000 | number: 2}} kB </strong> </output>
+          </div>
+
+          <div class="form-group col-md-6">
+            <label>Corpus 2</label>
+            <input type="file" title="Archivo JSON del corpus día 2" id="corpus2" required>
+            <output ng-show="corpus2.show"> <strong> {{corpus2.type}} - {{corpus2.size/1000 | number: 2}} kB </strong> </output>
+          </div>
+        </div>
+      </form>
+  </div>
+  <div class="panel-footer" style="text-align: center;">    
+    <div class="form-row">
+        <button type="submit" form="formArchivos" class="btn btn-primary">Generar</button>
+        <button type="reset" form="formArchivos" ng-click="cancelar()" class="btn btn">Cancelar</button>
+    </div>
+  </div>
+</div>
