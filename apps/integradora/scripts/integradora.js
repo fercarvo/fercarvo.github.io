@@ -5,9 +5,9 @@
                 templateUrl: 'apps/integradora/views/home.html',
                 controller: 'home'
             })
-            .state('dias', {
-                templateUrl: 'apps/integradora/views/dias.html',
-                controller: 'dias'
+            .state('corpus', {
+                templateUrl: 'apps/integradora/views/corpus.html',
+                controller: 'corpus'
             })
             .state('grafico', {
                 templateUrl: 'apps/integradora/views/grafico.html',
@@ -31,7 +31,7 @@
             })          
     }])
     .run(["$state", "$http", "$templateCache", function ($state, $http, $templateCache) {
-        loadTemplates($state, "dias", $http, $templateCache)
+        loadTemplates($state, "corpus", $http, $templateCache)
     }])
     .factory("data", [function(){
         var data = {
@@ -46,7 +46,14 @@
         }
         return data
     }])
-    .controller('dias', ["$scope", "$state", "$http", "data", "$rootScope", function($scope, $state, $http, data, $rootScope){
+    .controller("archivos", ["$scope", "$state", "data", "$rootScope", function($scope, $state, data, $rootScope){
+
+
+
+
+
+    }])
+    .controller('corpus', ["$scope", "$state", "$http", "data", "$rootScope", function($scope, $state, $http, data, $rootScope){
         //data.resultado = null
         var peticion = ""
         var contador = []
@@ -55,6 +62,8 @@
         $scope.k = 5
         $scope.lambda = 0.001
         $scope.alpha = 0.1
+        $scope.tfidf = "log"
+        $scope.topicos = "terminos"
 
         $scope.calculo = function (corpus) {
             if (contador.length < 2) {
@@ -78,7 +87,7 @@
             peticion = ""
         }
 
-        $scope.generar = async function (k, lambda) {
+        $scope.generar = async function (k, lambda, tfidf, topicos) {
             if (contador.length !== 2)
                 return alert("Por favor, seleccione dos corpus a procesar");
 
@@ -97,7 +106,7 @@
 
 
             try {
-                var res = await getJPP(data.params.id1, data.params.id2, data.params.k, data.params.lambda);
+                var res = await getJPP(data.params.id1, data.params.id2, data.params.k, data.params.lambda, tfidf, topicos);
                 data.resultado = res;
                 $rootScope.fechaDia1 = contador[0].fecha;
                 $rootScope.fechaDia2 = contador[1].fecha;

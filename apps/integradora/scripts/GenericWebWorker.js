@@ -1,5 +1,5 @@
 /**
-* GenericWebWorker v2.3
+* GenericWebWorker v3.0
 * 
 * A Generic Javascript WebWorker that allows the user to execute and pass functions
 * Is Fileless, for what the user does not need a file.js to request
@@ -19,8 +19,11 @@ class GenericWebWorker {
     async exec(cb) {
         if (typeof cb !== 'function')
             throw new Error(`${cb} not a function`);
+
+        if (!window)
+            throw "Please get a worker URL from GenericWebWorker.getURL() in the main page, then use it in execFromURL() method";
         
-        var wk_string = this.worker.toString();
+        var wk_string = GenericWebWorker.worker.toString();
         wk_string = wk_string.substring(wk_string.indexOf('{') + 1, wk_string.lastIndexOf('}'));            
         var wk_link = window.URL.createObjectURL( new Blob([ wk_string ]) );
         var wk = new Worker( wk_link );
@@ -41,7 +44,41 @@ class GenericWebWorker {
         return await Promise.all(res)
     }
 
-    worker() {
+    //Same as parallel but it use a Worker URL, may be used in nested Workers
+    async parallelFromURL(url, arr, cb) {
+        var res = [...arr].map(it => new GenericWebWorker(it, ...this.args).execFromURL(url, cb))
+        return await Promise.all(res)
+    }
+
+    //Obtiene una lista de urls de GenericWebWorker
+    static getURL() {
+        var wk_string = GenericWebWorker.worker.toString();
+        wk_string = wk_string.substring(wk_string.indexOf('{') + 1, wk_string.lastIndexOf('}'));
+        
+        return window.URL.createObjectURL( new Blob([ wk_string ]) )
+    }
+
+    /*
+        Use this method when you want to use generic Workers inside a Generic Worker.
+        You should create first the url with GenericWebWorker.getURL() and pass it in the constructor
+    */
+    async execFromURL (url, cb) {
+        if (typeof cb !== 'function')
+            throw new Error(`${cb} not a function`);
+
+        var wk = new Worker( url );
+
+        try { 
+            wk.postMessage({ callback: cb.toString(), args: this.args });
+            var res = await new Promise((next, error) => {
+                wk.onmessage = e => (e.data && e.data.error) ? error(e.data.error) : next(e.data);
+                wk.onerror = e => error(e.message);        
+            });            
+            return res
+        } catch (e) { throw e } finally { wk.terminate() }
+    }
+
+    static worker() {
         onmessage = async function (e) {
             try {                
                 var cb = new Function(`return ${e.data.callback}`)();

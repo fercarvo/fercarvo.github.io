@@ -9,6 +9,11 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="apps/integradora/styles/styles.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
+    <style>
+        a {
+            cursor: pointer;
+        }
+    </style>
 
 </head>
 <body ng-app="app">
@@ -23,21 +28,24 @@
             </div>
 
             <ul class="list-unstyled components">
-                <li ui-sref="documento">
-                    <a href="">Documentación</a>
+                <li ui-sref-active="active" ui-sref="home">
+                    <a>Home</a>
                 </li>
-                <li ui-sref="listener">
-                    <a href="">Streamming de tweets</a>
+                <li ui-sref-active="active" ui-sref="documento">
+                    <a>Documentación</a>
                 </li>
-                <li ui-sref="dias">
-                    <a href="">Corpus</a>
+                <li ui-sref-active="active" ui-sref="corpus">
+                    <a>Corpus</a>
                 </li>
-                <li ui-sref="grafico">
-                    <a href="">Graficos</a>
+                <li ui-sref-active="active" ui-sref="grafico">
+                    <a>Graficos</a>
+                </li>
+                <li ui-sref-active="active" ui-sref="listener">
+                    <a>Streamming de tweets</a>
                 </li>
                 
                 <li>
-                    <a href="" data-toggle="collapse" aria-expanded="false">Contactos</a>
+                    <a data-toggle="collapse" aria-expanded="false">Contactos</a>
                     <ul class="collapse list-unstyled" id="autores">
                         <li><a href="https://github.com/fercarvo" target="_blank">Edgar Fernando Carvajal</a></li>
                         <li><a href="https://github.com/wjvelez" target="_blank">Washignton Vélez</a></li>
@@ -64,11 +72,11 @@
 
                     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                         <ul class="nav navbar-nav navbar-right">
-                            <li ui-sref="home"><a href="">Principal</a></li>
-                            <li ui-sref="documento"><a href="">Documentación</a></li>
-                            <li ui-sref="dias"><a href="">Corpus</a></li>
-                            <li ui-sref="listener"><a href="">Listener</a></li>
-                            <li ui-sref="grafico"><a href="">Gáfico</a></li>
+                            <li ui-sref-active="active" ui-sref="home"><a>Home</a></li>
+                            <li ui-sref-active="active" ui-sref="documento"><a>Documentación</a></li>
+                            <li ui-sref-active="active" ui-sref="corpus"><a>Corpus</a></li>
+                            <li ui-sref-active="active" ui-sref="grafico"><a>Gáfico</a></li>
+                            <li ui-sref-active="active" ui-sref="listener"><a>Streamming</a></li>
                         </ul>
                     </div>
                 </div>

@@ -1,9 +1,9 @@
 <div>
   <h3 style="text-align: center;">
-    Parámetros de entrada
+    Visualización desde información almacenada
   </h3>
 
-  <form ng-submit="generar(k, lambda)" class="container">
+  <form ng-submit="generar(k, lambda, tfidf, topicos)" class="container">
     <div class="form-row">
       <div class="form-group col-md-4">
         <label>Número de tópicos (K)</label>
@@ -18,6 +18,24 @@
       <div class="form-group col-md-4">
         <label >Alpha</label>
         <input type="number" class="form-control" ng-model="alpha" disabled required>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label>Método TF-IDF</label>
+        <select title="Tipo de cálculo del TF-IDF" class="form-control" ng-model="tfidf" required>
+          <option value="log" selected>Normalización logaritmica</option>
+          <option value="double">Doble normalización 0.5</option>
+        </select>
+      </div>
+
+      <div class="form-group col-md-6">
+        <label >Extraer tópicos desde</label>
+        <select title="Método de extracción de tópicos" class="form-control" ng-model="topicos" required>
+          <option value="terminos">Matriz tópico terminos</option>
+          <option value="documentos" selected>Matriz documento tópicos</option>
+        </select>
       </div>
     </div>
 

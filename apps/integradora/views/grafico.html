@@ -55,7 +55,7 @@
             <table class="table table-condensed">
               <tbody>
                 <tr ng-repeat="topico in topicos_2">
-                  <td title="Grafico tópico {{$index+1}}" style="padding-top: 6px;padding-bottom: 6px;vertical-align : middle;"> <button style="padding-bottom: 4px;padding-top: 4px;" class="btn btn-primary" ng-click="obtenerColumna($index)">TP{{$index + 1}}</button> </td>
+                  <td title="Grafico tópico {{$index+1}}" style="padding-top: 6px;padding-bottom: 6px;vertical-align : middle;"> <button style="padding-bottom: 4px;padding-top: 4px;" class="btn btn-primary" ng-click="obtenerFila($index)">TP{{$index + 1}}</button> </td>
                   <td> <div ng-repeat="palabra in topico" class="chip">{{palabra}}</div> </td>
                 </tr>
               </tbody>

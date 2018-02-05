@@ -207,62 +207,71 @@ class Matrix {
         }
     }
 
-    static dot (M, N) {
-	    var result = [];
-	    for (var i = 0; i < M.rows; i++) {
-	        result[i] = [];
-	        for (var j = 0; j < N.columns; j++) {
-	            var sum = 0;
-	            for (var k = 0; k < M.columns; k++) {
-	            	sum += M.data[i][k] * N.data[k][j]
-	            }
-	            result[i][j] = sum;
-	        }
-	    }
-	    return new Matrix(result)
-    }
+    /*static async asyncDot(A, B) {
+    	if (!(A instanceof Matrix))
+    		A = new Matrix(B);
 
-    /*static dot(a, b) {
-		var aNumRows = a.rows, aNumCols = a.columns,
-			bNumRows = b.rows, bNumCols = b.rows,
-			m = new Array(aNumRows);  // initialize array of rows
-		for (var r = 0; r < aNumRows; ++r) {
-			m[r] = new Array(bNumCols); // initialize the current row
-			for (var c = 0; c < bNumCols; ++c) {
-				m[r][c] = 0;             // initialize the current cell
-				for (var i = 0; i < aNumCols; ++i) {
-					m[r][c] += a.data[r][i] * b.data[i][c];
-				}
-			}
-		}
-		console.log("0 0 ", m[0][0])
-		return new Matrix(m);
-	}*/
+    	if (!(B instanceof Matrix))
+    		B = new Matrix(B);
 
+    	if (A.columns !== B.rows)
+    		throw "Invalid matrix size for matrix multiplication"
 
-    /*static dot (A, B) {
-        var result = new Array(A.rows);
-        for (var r = 0; r < A.rows; r++) {
-            result[r] = new Array(B.columns).fill(0)
-            for (var c = 0; c < B.columns; c++) {
-            	let suma = 0
-                for (var i = 0; i < A.columns; i++)
-                    suma += A.data[r][i] * B.data[i][c];             
-                
-                result[r][c] = suma
-            }
-        }
-        return new Matrix(result)
+    	var worker = new GenericWebWorker(A, B, Matrix);	
+    	var url = GenericWebWorker.getURL()
+    	var result = await worker.exec((A, B, Matrix) => {
+    		return Matrix.dot(A, B)	
+    	})//result = [ [[1,1], 234], [[1,2], 234234],... ]
+
+    	return result;
     }*/
 
+    static dot (M, N) {
+    	var result = Matrix.zeros(M.rows, N.columns);
+
+    	result.data = result.data.map((row, i) => {
+    		return row.map((val, j) => {
+	            for (var k = 0; k < M.columns; k++)
+	            	val += M.data[i][k] * N.data[k][j];
+	            return val;
+    		})
+    	})
+    	return result;
+    }
+
     static random (n, m) {
-        var matrix = new Array(n).fill( new Array(m).fill(0) )
-        var result = matrix.map(fila => fila.map(z => Math.random() ))
-        return new Matrix(result)
+        var matrix = new Array(n).fill(0).map(row => new Array(m).fill(0))//new Array(n).fill( new Array(m).fill(0) )
+        matrix = matrix.map(row => row.map(val => Math.random() ))
+
+        var result = new Matrix(null, 'empty')
+        result.data = matrix
+        result.rows = n
+        result.columns = m
+        return result
+    }
+
+    static ones (n, m) {
+        var matrix = new Array(n).fill(0).map(row => new Array(m).fill(1))// new Array(n).fill( new Array(m).fill(0) )
+        
+        var result = new Matrix(null, 'empty')
+        result.data = matrix
+        result.rows = n
+        result.columns = m
+        return result
+    }
+
+    static zeros (n, m) {
+        var matrix = new Array(n).fill(0).map(row => new Array(m).fill(0))// new Array(n).fill( new Array(m).fill(0) )
+        
+        var result = new Matrix(null, 'empty')
+        result.data = matrix
+        result.rows = n
+        result.columns = m
+        return result
     }
 
     static identity (size) {
-        var matrix = new Array(size).fill( new Array(size).fill(0) )
+        var matrix =  new Array(size).fill(0).map(row => new Array(size).fill(0));//new Array(size).fill( new Array(size).fill(0) )
         for (var i = 0; i < size; i++)
         	matrix[i][i] = 1;
 
@@ -340,23 +349,32 @@ class Matrix {
 }
 
 
-function cp_tfidf (setPalabras, corpus) {
-	return setPalabras.reduce((arr, word) => [...arr, tf_idf2(corpus, word)], []);
+function cp_tfidf (setPalabras, corpus, normalization) {
+	//return setPalabras.reduce((arr, word) => [...arr, tf_idf2(corpus, word)], []);
+	if (normalization === "log") {
+		console.log("Log normalization")
+		return setPalabras.map(word => tf_idf(corpus, word));
+	} else {
+		console.log("double normalization")
+		return setPalabras.map(word => tf_idf2(corpus, word));
+	}
 
 	// corpus = [{word: frecuency}]
 	function tf_idf (corpus, word) {	
-		var tf = (doc, word) => Math.log(1 + (doc.map[word]|| 0) )
-		var nt = corpus.reduce((nt, doc)=> doc.map[word] ? ++nt : nt ,1)
+		var tf = (doc, word) => Math.log(1 + (doc.map.get(word)|| 0) )
+		var nt = corpus.reduce((nt, doc)=> doc.map.get(word) ? ++nt : nt ,1)
 		var idf = Math.log(1 + (corpus.length / nt))
 
-		return corpus.reduce((xT, doc) => [...xT, tf(doc, word)*idf], [])
+		//return corpus.reduce((xT, doc) => [...xT, tf(doc, word)*idf], [])
+		return corpus.map(doc => tf(doc, word)*idf)
 	}
 
 	function tf_idf2 (corpus, word) {
 		var tf = (doc, word) => 0.5 + ((0.5*(doc.map.get(word) ? doc.map.get(word) : 0))/doc.values);
 		var nt = corpus.reduce((nt, doc)=> doc.map.get(word) ? ++nt : nt ,1)
 		var idf = Math.log(1 + (corpus.length / nt))
-		return corpus.reduce((xT, doc) => [...xT, tf(doc, word)*idf], [])
+		//return corpus.reduce((xT, doc) => [...xT, tf(doc, word)*idf], [])
+		return corpus.map(doc => tf(doc, word)*idf)
 	}
 }
 
@@ -409,7 +427,7 @@ async function getCorpus(id) {
 	return JSON.parse(data)
 }
 
-async function getJPP(corpus1, corpus2, k = 5, lambda = 0.01) {
+async function getJPP(corpus1, corpus2, k = 5, lambda = 0.01, tfidf = "log", topicos = "terminos") {
 	var arr_data = await Promise.all( [getX(corpus1),  getX(corpus2)] )
 
 	var data_1 = arr_data[0]
@@ -423,19 +441,19 @@ async function getJPP(corpus1, corpus2, k = 5, lambda = 0.01) {
     console.log("Numero palabras", setPalabras.length)
     console.time("X Process")
 
-	var p1 = new GenericWebWorker(setPalabras, data_1.corpus, cp_tfidf, Matrix)
-		.exec((set, corp, tfidf, Matrix) => new Matrix( tfidf(set, corp) ).T.data);
+	var p1 = new GenericWebWorker(setPalabras, data_1.corpus, cp_tfidf, Matrix, tfidf)
+		.exec((set, corp, tfidf, Matrix, type) => new Matrix( tfidf(set, corp, type) ).T.data);
 
-	var p2 = new GenericWebWorker(setPalabras, data_2.corpus, cp_tfidf, Matrix)
-		.exec((set, corp, tfidf, Matrix) => new Matrix( tfidf(set, corp) ).T.data);
+	var p2 = new GenericWebWorker(setPalabras, data_2.corpus, cp_tfidf, Matrix, tfidf)
+		.exec((set, corp, tfidf, Matrix, type) => new Matrix( tfidf(set, corp, type) ).T.data);
 
 	try {
 		var X = await Promise.all([p1, p2])
 
 		console.timeEnd("X Process")
 
-		var worker = new GenericWebWorker(k, alpha, lambda, epsilon, maxiter, X[0], X[1], JPP, Matrix, extraerDocTopicos, data_1, data_2)
-		var data = await worker.exec((k, alpha, lambda, epsilon, maxiter, X_1, X_2, JPP, Matrix, extraerDocTopicos, data_1, data_2) => {
+		var worker = new GenericWebWorker(k, alpha, lambda, epsilon, maxiter, X[0], X[1], JPP, Matrix, extraerDocTopicos, extraerTopicos, topicos, data_1, data_2)
+		var data = await worker.exec((k, alpha, lambda, epsilon, maxiter, X_1, X_2, JPP, Matrix, extraerDocTopicos, extraerTopicos, tipoTopico, data_1, data_2) => {
 			var r_1 = Matrix.random(k, X_1[0].length ).data
 
 			console.time("JPP")
@@ -444,8 +462,18 @@ async function getJPP(corpus1, corpus2, k = 5, lambda = 0.01) {
 			console.timeEnd("JPP")
 
 			console.time("Topicos")
-			var topicos_1 = extraerDocTopicos( jpp_1.W, data_1.corpus, Matrix)
-			var topicos_2 = extraerDocTopicos( jpp_2.W, data_2.corpus, Matrix)
+			var topicos_1
+			var topicos_2
+			if (tipoTopico === "terminos") {
+				console.log("Tópicos de terminos...")
+				var setPalabras = [...new Set([...data_1.setPalabras, ...data_2.setPalabras]) ]
+				topicos_1 = extraerTopicos( jpp_1.H, setPalabras)
+				topicos_2 = extraerTopicos( jpp_2.H, setPalabras)
+			} else {
+				console.log("Tópicos de documentos...")
+				topicos_1 = extraerDocTopicos( jpp_1.W, data_1.corpus, Matrix)
+				topicos_2 = extraerDocTopicos( jpp_2.W, data_2.corpus, Matrix)
+			}
 			console.timeEnd("Topicos")
 
 			return {M: jpp_2.M, topicos_1, topicos_2};
@@ -460,10 +488,10 @@ async function getJPP(corpus1, corpus2, k = 5, lambda = 0.01) {
 
 	//Extrae los terminos con mayor tfidf de cada tópico
 	function extraerTopicos (H, setPalabras) { //de H
-		return H.map(function (topico){
+		return H.map(topico => {
 			topico = topico.map((val, i) => {return {val, word: setPalabras[i]} })
 			topico.sort((a, b) => b.val - a.val)
-			return topico.slice(0, 10).map(item => item.word)
+			return topico.slice(0, 7).map(item => item.word)
 		})
 	}
 
