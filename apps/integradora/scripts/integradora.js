@@ -35,7 +35,7 @@
             })          
     }])
     .run(["$state", "$http", "$templateCache", function ($state, $http, $templateCache) {
-        loadTemplates($state, "archivos", $http, $templateCache)
+        loadTemplates($state, "corpus", $http, $templateCache)
     }])
     .factory("data", [function(){
         var data = {
@@ -215,10 +215,12 @@
         fetch(`https://fercarvo.github.io/apps/integradora/DB/corpus.json`)
         .then(res => res.ok ? Promise.resolve(res.text()) : Promise.reject(res.statusText))
         .then(data => {
-            $scope.data = JSON.parse(data).filter(c => c.compressed);
-            $scope.data.forEach(corpus => {
+            var data = JSON.parse(data).filter(c => c.compressed);
+            data.forEach(corpus => {
                 corpus.check = false
             })
+
+            $scope.data = data
             $scope.$apply()
             
         })

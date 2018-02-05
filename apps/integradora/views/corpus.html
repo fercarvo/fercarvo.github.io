@@ -55,28 +55,10 @@
       <div class="panel-heading">
         <h3 class="panel-title">Seleccione dos corpus a procesar</h3>
       </div>
-      <div class="panel-body">
-        <table class="table table-hover table-bordered">
-          <thead >
-            <tr class="active">
-              <th >ID</th>
-              <th >Fecha</th>
-              <th class="text-center">Seleccionar</th>
-            </tr>
-          </thead>
-        
-          <tbody>
-            <tr ng-repeat="c in data | orderBy : ['fecha']">
-              <th >corpus {{$index + 1}}</th>
-              <td >{{c.fecha | date: 'dd-MM-yyyy' : 'UTC'}}</td>
-              <td class="text-center">
-                <input form="despacharForm" ng-disabled="disable" ng-checked="c.check" type="checkbox" ng-click="calculo(c)">
-                <br>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-
+      <div class="panel-body" style="text-align: center;">
+        <button ng-repeat="c in data | orderBy : ['fecha']" ng-disabled="disable || c.check" ng-click="calculo(c)" style="margin: 5px;width: 110px;" ng-class="c.check ? 'btn btn-primary' : 'btn'"> 
+          <div style="font-weight: bold;">CP{{$index + 1}}:</div> {{c.fecha | date: 'dd-MM-yyyy' : 'UTC'}}
+        </button>
 
       </div>      
     </div>
