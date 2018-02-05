@@ -352,10 +352,8 @@ class Matrix {
 function cp_tfidf (setPalabras, corpus, normalization) {
 	//return setPalabras.reduce((arr, word) => [...arr, tf_idf2(corpus, word)], []);
 	if (normalization === "log") {
-		console.log("Log normalization")
 		return setPalabras.map(word => tf_idf(corpus, word));
 	} else {
-		console.log("double normalization")
 		return setPalabras.map(word => tf_idf2(corpus, word));
 	}
 
@@ -432,6 +430,17 @@ async function getCorpus(id) {
 }
 
 async function getJPP(corpus1, corpus2, k = 5, lambda = 0.01, tfidf = "log", topicos = "terminos") {
+
+	if (tfidf === "log")
+		console.log("[Normalizacion logaritmica]")
+	else
+		console.log("[Doble normalization 0.5]")
+
+	if (topicos === "terminos")
+		console.log("Topicos [matriz topicos x terminos]")
+	else
+		console.log("Topicos [matriz documentos x topicos]")
+
 	var arr_data = await Promise.all( [getX(corpus1),  getX(corpus2)] )
 
 	var data_1 = arr_data[0]
@@ -469,12 +478,10 @@ async function getJPP(corpus1, corpus2, k = 5, lambda = 0.01, tfidf = "log", top
 			var topicos_1
 			var topicos_2
 			if (tipoTopico === "terminos") {
-				console.log("Tópicos de terminos...")
 				var setPalabras = [...new Set([...data_1.setPalabras, ...data_2.setPalabras]) ]
 				topicos_1 = extraerTopicos( jpp_1.H, setPalabras)
 				topicos_2 = extraerTopicos( jpp_2.H, setPalabras)
 			} else {
-				console.log("Tópicos de documentos...")
 				topicos_1 = extraerDocTopicos( jpp_1.W, data_1.corpus, Matrix)
 				topicos_2 = extraerDocTopicos( jpp_2.W, data_2.corpus, Matrix)
 			}

@@ -2,10 +2,34 @@
   <div class="panel-heading">
       <h4 class="panel-titlle" style="text-align: center;"> Procesamiento desde archivos JSON </h4>
   </div>
-
+  <style>
+    p {
+        text-align: justify;
+        text-justify: inter-word;
+        color: black;
+    }    
+  </style>
   <div class="panel-body">
-    <p style="color: black;"> En la siguiente sección el usuario puede ingresar y procesar dos corpus provenientes de archivos .json; el formato debe será un arreglo de objetos (documentos), en el que cada uno tendŕa una única propiedad llamada texto, la cual tendŕa arreglo de strings. <a style="color: blue; text-decoration: underline;" target="_blank" rel="noopener noreferrer" href="https://fercarvo.github.io/apps/integradora/DB/corpus/prueba_corpus.json">ejemplo.json</a> </p>
+    <p > En la siguiente sección el usuario podrá ingresar y procesar dos corpus provenientes de archivos <strong><a style="text-decoration: underline;" target="_blank" rel="noopener noreferrer" href="https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Objects/JSON">.json</a></strong>; el formato de cada corpus deberá ser un arreglo de objetos (documentos), en el cual, cada elemento tendrá una única propiedad llamada <strong>text</strong>, que a su vez poseerá un arreglo de strings: texto, parrafos, el documento en sí.</p> <p> <a onclick="saveFile(); return false;" style="color: blue;text-decoration: underline;">ejemplo_corpus.json</a> </p>
   </div>
+  <script>
+    async function saveFile () {
+        var data = await fetch("https://fercarvo.github.io/apps/integradora/DB/corpus/prueba_corpus.json");
+        if (data.ok) {
+            data = await data.text();
+
+            var a = document.createElement('a');
+            var url = window.URL.createObjectURL(new Blob([data], {type: 'application/json'}, 'ejemplo_corpus.json'));
+
+            a.setAttribute('href', url)
+            a.setAttribute('download', 'ejemplo_corpus.json')
+            document.body.appendChild(a)
+            a.click();
+            window.URL.revokeObjectURL(url);
+            a.remove();
+        }
+    }
+  </script>
 
   <div class="panel-body">
       <form ng-submit="generar(k, lambda, tfidf, topicos)" id="formArchivos" class="container">
