@@ -460,42 +460,38 @@ async function getJPP(corpus1, corpus2, k = 5, lambda = 0.01, tfidf = "log", top
 	var p2 = new GenericWebWorker(setPalabras, data_2.corpus, cp_tfidf, Matrix, tfidf)
 		.exec((set, corp, tfidf, Matrix, type) => new Matrix( tfidf(set, corp, type) ).T.data);
 
-	try {
-		var X = await Promise.all([p1, p2])
+	var X = await Promise.all([p1, p2])
 
-		console.timeEnd("X Process")
+	console.timeEnd("X Process")
 
-		var worker = new GenericWebWorker(k, alpha, lambda, epsilon, maxiter, X[0], X[1], JPP, Matrix, extraerDocTopicos, extraerTopicos, topicos, data_1, data_2)
-		var data = await worker.exec((k, alpha, lambda, epsilon, maxiter, X_1, X_2, JPP, Matrix, extraerDocTopicos, extraerTopicos, tipoTopico, data_1, data_2) => {
-			var r_1 = Matrix.random(k, X_1[0].length ).data
+	var worker = new GenericWebWorker(k, alpha, lambda, epsilon, maxiter, X[0], X[1], JPP, Matrix, extraerDocTopicos, extraerTopicos, topicos, data_1, data_2)
+	var data = await worker.exec((k, alpha, lambda, epsilon, maxiter, X_1, X_2, JPP, Matrix, extraerDocTopicos, extraerTopicos, tipoTopico, data_1, data_2) => {
+		var r_1 = Matrix.random(k, X_1[0].length ).data
 
-			console.time("JPP")
-			var jpp_1 = JPP(X_1, r_1, k, alpha, lambda, epsilon, maxiter, Matrix)
-			var jpp_2 = JPP(X_2, jpp_1.H, k, alpha, lambda, epsilon, maxiter, Matrix)
-			console.timeEnd("JPP")
+		console.time("JPP")
+		var jpp_1 = JPP(X_1, r_1, k, alpha, lambda, epsilon, maxiter, Matrix)
+		var jpp_2 = JPP(X_2, jpp_1.H, k, alpha, lambda, epsilon, maxiter, Matrix)
+		console.timeEnd("JPP")
 
-			console.time("Topicos")
-			var topicos_1
-			var topicos_2
-			if (tipoTopico === "terminos") {
-				var setPalabras = [...new Set([...data_1.setPalabras, ...data_2.setPalabras]) ]
-				topicos_1 = extraerTopicos( jpp_1.H, setPalabras)
-				topicos_2 = extraerTopicos( jpp_2.H, setPalabras)
-			} else {
-				topicos_1 = extraerDocTopicos( jpp_1.W, data_1.corpus, Matrix)
-				topicos_2 = extraerDocTopicos( jpp_2.W, data_2.corpus, Matrix)
-			}
-			console.timeEnd("Topicos")
+		console.time("Topicos")
+		var topicos_1
+		var topicos_2
+		if (tipoTopico === "terminos") {
+			var setPalabras = [...new Set([...data_1.setPalabras, ...data_2.setPalabras]) ]
+			topicos_1 = extraerTopicos( jpp_1.H, setPalabras)
+			topicos_2 = extraerTopicos( jpp_2.H, setPalabras)
+		} else {
+			topicos_1 = extraerDocTopicos( jpp_1.W, data_1.corpus, Matrix)
+			topicos_2 = extraerDocTopicos( jpp_2.W, data_2.corpus, Matrix)
+		}
+		console.timeEnd("Topicos")
 
-			return {M: jpp_2.M, topicos_1, topicos_2};
-		})
+		return {M: jpp_2.M, topicos_1, topicos_2};
+	})
 
-		console.log("Data after worker", data)
+	console.log("Data after worker", data)
 
-		return data
-	} catch (e) {
-		console.log("Error en JPP", e)
-	}
+	return data;
 
 	//Extrae los terminos con mayor tfidf de cada tópico
 	function extraerTopicos (H, setPalabras) { //de H

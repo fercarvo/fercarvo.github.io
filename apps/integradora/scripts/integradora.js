@@ -146,15 +146,14 @@
         }
 
     }])
-    .controller('corpus', ["$scope", "$state", "$http", "data", "$rootScope", function($scope, $state, $http, data, $rootScope){
-        //data.resultado = null
+    .controller('corpus', ["$scope", "$state", "$http", "data", "$rootScope", function($scope, $state, $http, data, $rootScope){(async function() {
+        
         var peticion = ""
         var contador = []
-        //$scope.disable = null
-        //$scope.check = null
+
         $scope.k = 5
         $scope.lambda = 0.001
-        $scope.alpha = 0.1
+        $scope.alpha = 0.01
         $scope.tfidf = "log"
         $scope.topicos = "terminos"
 
@@ -194,9 +193,7 @@
             console.log(`\nCp1 ${contador[0].fecha}`)
             console.log(`Cp2 ${contador[1].fecha}`)
 
-            //peticion = `${data.params.id1}/${data.params.id2}/${data.params.k}/${data.params.lambda}`;
             waitingDialog.show('Procesando corpus, por favor espere');
-
 
             try {
                 var res = await getJPP(data.params.id1, data.params.id2, data.params.k, data.params.lambda, tfidf, topicos);
@@ -213,20 +210,17 @@
         }
 
         fetch(`https://fercarvo.github.io/apps/integradora/DB/corpus.json`)
-        .then(res => res.ok ? Promise.resolve(res.text()) : Promise.reject(res.statusText))
-        .then(data => {
-            var data = JSON.parse(data).filter(c => c.compressed);
-            data.forEach(corpus => {
-                corpus.check = false
-            })
+        .then(async (data) => {
+            if (data.ok) {
+                data = JSON.parse(await data.text()).filter(c => c.compressed);
+                data.forEach(c => c.check = false )
 
-            $scope.data = data
-            $scope.$apply()
-            
-        })
-        .catch(e => console.log('Error corpus.json', e))
+                $scope.data = data
+                $scope.$apply()
+            }
+        }).catch(e => console.log('Error corpus.json', e))
 
-    }])
+    })()}])
     .controller('listener', ["$scope", "$state", function($scope, $state){
         console.log("Este controlador funciona solo con conexiones localhost")
         var socket_tweets = io.connect('http://localhost:3002', {'forceNew':true }); //tweets
@@ -241,6 +235,11 @@
     }])
     .controller('grafico', ["$scope", "$state", "data", '$rootScope', function ($scope, $state, data, $rootScope) {
         
+        if (data.resultado === null) {
+            alert("No existe informacion para mostrar!");
+            return $state.go('corpus');
+        }
+
         $scope.matrix = function() { $state.go('grafico.matrix') }
 
         waitingDialog.hide()
