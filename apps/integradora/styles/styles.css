@@ -124,16 +124,17 @@ a:active{
     background: #fff;
 }
 
-#sidebar ul li.active > a, a[aria-expanded="true"] {
+/*#sidebar ul li.active > a, a[aria-expanded="true"] {
     color: #fff;
     background: #6d7fcc;
-}
+}*/
 
 
 a[data-toggle="collapse"] {
     position: relative;
 }
 
+/* //Flecha en los dropdown
 a[aria-expanded="false"]::before, a[aria-expanded="true"]::before {
     content: '\e259';
     display: block;
@@ -144,14 +145,14 @@ a[aria-expanded="false"]::before, a[aria-expanded="true"]::before {
 }
 a[aria-expanded="true"]::before {
     content: '\e260';
-}
+}*/
 
 
-ul ul a {
+/*ul ul a {
     font-size: 0.9em !important;
     padding-left: 30px !important;
     background: #6d7fcc;
-}
+}*/
 
 
 a.repo {

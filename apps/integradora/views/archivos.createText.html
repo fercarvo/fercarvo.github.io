@@ -1,0 +1,39 @@
+  <div class="panel-body">
+      <form ng-submit="crearCorpus(fileName)" id="formArchivos">
+        <div class="form-row">
+          <div class="form-group col-md-5">
+            <label>File Name</label>
+            <div class="input-group">
+              <input title="Insert a file name" ng-init="fileName='myCorpus'" ng-model="fileName" type="text" class="form-control" aria-describedby="json" required>
+              <span class="input-group-addon" id="json">.json</span>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col-md-12" >
+            <button type="submit" class="btn btn-primary">Generar</button>
+          </div>  
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col-md-12">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Document text <button type="button" ng-click="addDoc()" style="margin-left: 11px;" class="btn btn-default"> <span class="glyphicon glyphicon-plus"></span> </button> </th>
+                  <th>Delete</th>
+                </tr>
+              </thead>
+              <tbody >
+                <tr ng-repeat="doc in documents">
+                  <td><textarea title="Document {{$index + 1}}" ng-model="doc.data" required style="resize: vertical;" title="Insert a file name" class="form-control" required></textarea></td>
+                  <td style="vertical-align: middle;"><button type="button" ng-click="delete(documents, $index)" ng-disabled="documents.length <= 1 ? true : false" style="border:none;background-color:inherit;" class="glyphicon glyphicon-trash"></button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </form>
+  </div>

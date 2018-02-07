@@ -1,92 +1,20 @@
 <div class="panel panel-default">
-  <div class="panel-heading">
-      <h4 class="panel-titlle" style="text-align: center;"> Procesamiento desde archivos JSON </h4>
-  </div>
-  <style>
-    p {
-        text-align: justify;
-        text-justify: inter-word;
-        color: black;
-    }    
-  </style>
-  <div class="panel-body">
-    <p > En la siguiente sección el usuario podrá ingresar y procesar dos corpus provenientes de archivos <a style="text-decoration: underline;" target="_blank" rel="noopener noreferrer" href="https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Objects/JSON">.json</a>; el formato de cada corpus deberá ser un arreglo de objetos (documentos), en el cual, cada elemento tendrá una única propiedad llamada <strong>text</strong>, que a su vez poseerá un arreglo de strings: texto, parrafos, el documento en sí.</p> <p> <a onclick="saveFile(); return false;" style="color: blue;text-decoration: underline;">ejemplo_corpus.json</a> </p>
-  </div>
-  <script>
-    async function saveFile () {
-        var data = await fetch("https://fercarvo.github.io/apps/integradora/DB/corpus/prueba_corpus.json");
-        if (data.ok) {
-            data = await data.text();
-
-            var a = document.createElement('a');
-            var url = window.URL.createObjectURL(new Blob([data], {type: 'application/json'}, 'ejemplo_corpus.json'));
-
-            a.setAttribute('href', url)
-            a.setAttribute('download', 'ejemplo_corpus.json')
-            document.body.appendChild(a)
-            a.click();
-            window.URL.revokeObjectURL(url);
-            a.remove();
-        }
-    }
-  </script>
-
-  <div class="panel-body">
-      <form ng-submit="generar(k, lambda, tfidf, topicos)" id="formArchivos" class="container">
-        <div class="form-row">
-          <div class="form-group col-md-4">
-            <label>Número de tópicos (K)</label>
-            <input title="Número de tópicos a extraer por cada corpus" type="number" class="form-control" ng-model="k" min="1" max="8" required>
-          </div>
-
-          <div class="form-group col-md-4">
-            <label >Lambda</label>
-            <input type="number" min="0" step="0.0001" class="form-control" ng-model="lambda" required>
-          </div>
-
-          <div class="form-group col-md-4">
-            <label >Alpha</label>
-            <input type="number" min="0" step="0.0001" class="form-control" ng-model="alpha" required>
-          </div>
-        </div>
-
-        <div class="form-row">
-          <div class="form-group col-md-6">
-            <label>Método TF-IDF</label>
-            <select title="Tipo de cálculo del TF-IDF" class="form-control" ng-model="tfidf" required>
-              <option value="log" selected>Normalización logaritmica</option>
-              <option value="double">Doble normalización 0.5</option>
-            </select>
-          </div>
-
-          <div class="form-group col-md-6">
-            <label >Extraer tópicos desde</label>
-            <select title="Método de extracción de tópicos" class="form-control" ng-model="topicos" required>
-              <option value="terminos">Matriz tópico terminos</option>
-              <option value="documentos" selected>Matriz documento tópicos</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="form-row">
-          <div class="form-group col-md-6">
-            <label>Corpus 1</label>
-            <input type="file" title="Archivo JSON del corpus día 1" id="corpus1" required>
-            <output ng-show="corpus1.show"> <strong> {{corpus1.type}} - {{corpus1.size/1000 | number: 2}} kB </strong> </output>
-          </div>
-
-          <div class="form-group col-md-6">
-            <label>Corpus 2</label>
-            <input type="file" title="Archivo JSON del corpus día 2" id="corpus2" required>
-            <output ng-show="corpus2.show"> <strong> {{corpus2.type}} - {{corpus2.size/1000 | number: 2}} kB </strong> </output>
-          </div>
-        </div>
-      </form>
-  </div>
-  <div class="panel-footer" style="text-align: center;">    
-    <div class="form-row">
-        <button type="submit" form="formArchivos" class="btn btn-primary">Generar</button>
-        <button type="reset" form="formArchivos" ng-click="cancelar()" class="btn btn">Cancelar</button>
-    </div>
-  </div>
+	<div class="panel-heading">
+		<h4 class="panel-titlle" style="text-align: center;"> Procesamiento desde archivos JSON </h4>
+	</div>
+	<div class="panel-body">
+		<ul class="nav nav-tabs">
+			<li ui-sref-active="active" ui-sref="archivos.process"><a href="#">File Process</a></li>
+			<li ui-sref-active="active" class="dropdown">
+				<a class="dropdown-toggle" ui-sref-active="active" data-toggle="dropdown" href="#">Create Corpus
+					<span class="caret"></span>
+				</a>
+				<ul class="dropdown-menu">
+					<li ui-sref-active-parent="active" ui-sref="archivos.createText"><a href="#">From Text</a></li>
+					<li ui-sref-active-parent="active" ui-sref="archivos.createFiles"><a href="#">From File</a></li>
+				</ul>
+			</li>
+		</ul>
+	</div>
+	<ui-view></ui-view>
 </div>

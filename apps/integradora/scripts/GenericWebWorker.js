@@ -19,10 +19,7 @@ class GenericWebWorker {
     async exec(cb) {
         if (typeof cb !== 'function')
             throw new Error(`${cb} not a function`);
-
-        if (!window)
-            throw "Please get a worker URL from GenericWebWorker.getURL() in the main page, then use it in execFromURL() method";
-        
+    
         var wk_string = GenericWebWorker.worker.toString();
         wk_string = wk_string.substring(wk_string.indexOf('{') + 1, wk_string.lastIndexOf('}'));            
         var wk_link = window.URL.createObjectURL( new Blob([ wk_string ]) );
@@ -35,7 +32,7 @@ class GenericWebWorker {
                 wk.onerror = e => error(e.message);        
             });            
             return res
-        } catch (e) { throw e } finally { wk.terminate(); window.URL.revokeObjectURL(wk_link) }
+        } catch (e) { throw new Error(e) } finally { wk.terminate(); window.URL.revokeObjectURL(wk_link) }
     }
 
     //@param {function} cb, To be executed, the 1st argument is each element of the array
@@ -75,7 +72,7 @@ class GenericWebWorker {
                 wk.onerror = e => error(e.message);        
             });            
             return res
-        } catch (e) { throw e } finally { wk.terminate() }
+        } catch (e) { throw new Error(e) } finally { wk.terminate() }
     }
 
     static worker() {

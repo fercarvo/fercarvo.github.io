@@ -13,6 +13,22 @@
                 templateUrl: 'apps/integradora/views/archivos.html',
                 controller: 'archivos'
             })
+            .state('archivos.process', {
+                templateUrl: 'apps/integradora/views/archivos.process.html',
+                controller: 'archivos.process'
+            })
+            .state('archivos.createText', {
+                templateUrl: 'apps/integradora/views/archivos.createText.html',
+                controller: 'archivos.createText'
+            })
+            .state('archivos.createFiles', {
+                templateUrl: 'apps/integradora/views/archivos.createFiles.html',
+                controller: 'archivos.createFiles'
+            })
+            /*.state('corpus-creator', {
+                templateUrl: 'apps/integradora/views/corpus-creator.html',
+                controller: 'corpus-creator'
+            })*/
             .state('grafico', {
                 templateUrl: 'apps/integradora/views/grafico.html',
                 controller: 'grafico'
@@ -25,14 +41,14 @@
                 templateUrl: 'apps/integradora/views/grafico.barras.html',
                 controller: 'grafico.barras'
             })
-            .state('listener', {
-                templateUrl: 'apps/integradora/views/stream.html',
-                controller: 'listener'
-            })
             .state('documento', {
                 templateUrl: 'apps/integradora/views/documento.html',
                 controller: 'documento'
-            })          
+            })
+            /*.state('listener', {
+                templateUrl: 'apps/integradora/views/stream.html',
+                controller: 'listener'
+            })*/          
     }])
     .run(["$state", "$http", "$templateCache", function ($state, $http, $templateCache) {
         loadTemplates($state, "corpus", $http, $templateCache)
@@ -50,7 +66,10 @@
         }
         return data
     }])
-    .controller("archivos", ["$scope", "$state", "data", "$rootScope", function($scope, $state, data, $rootScope){
+    .controller("archivos" ,["$state", function($state){
+        $state.go("archivos.process")
+    }])
+    .controller("archivos.process", ["$scope", "$state", "data", "$rootScope", function($scope, $state, data, $rootScope){
 
         var peticion = ""
         var corpus1 = null;
@@ -60,6 +79,7 @@
         $scope.alpha = 0.1
         $scope.tfidf = "log"
         $scope.topicos = "terminos"
+        $scope.stemming = "spanish"
 
         $scope.corpus1 = {}
         $scope.corpus2 = {}
@@ -122,17 +142,15 @@
             reader.readAsText(file);
         }
 
-        $scope.generar = async function (k, lambda, tfidf, topicos) {
+        $scope.generar = async function (k, lambda, tfidf, topicos, stemming) {
 
             data.params.k = k
             data.params.lambda = lambda
 
-            //peticion = `${data.params.id1}/${data.params.id2}/${data.params.k}/${data.params.lambda}`;
             waitingDialog.show('Procesando corpus, por favor espere');
 
-
             try {
-                var res = await getJPP(corpus1, corpus2, data.params.k, data.params.lambda, tfidf, topicos);
+                var res = await getJPP(corpus1, corpus2, data.params.k, data.params.lambda, tfidf, topicos, stemming);
                 data.resultado = res;
                 $rootScope.fechaDia1 = "Sin fecha";
                 $rootScope.fechaDia2 = "Sin fecha";
@@ -141,12 +159,42 @@
                     return $state.go("grafico");
                 alert("No se ha obtenido la informacion correcta")
                 
-            } catch (e) { alert(`Error: ${e}`) }
+            } catch (e) { console.log(e); alert(`Error: ${e}`) }
             finally { waitingDialog.hide() }             
         }
 
     }])
-    .controller('corpus', ["$scope", "$state", "$http", "data", "$rootScope", function($scope, $state, $http, data, $rootScope){(async function() {
+    .controller("archivos.createText" ,["$scope", "$state", function($scope, $state){
+
+        $scope.documents = [{id: "document", data: ""}];
+
+        $scope.crearCorpus = (file_name) => {
+            var corpus = $scope.documents.map(d => {return {text: [d.data]}})
+            corpus = JSON.stringify(corpus)
+            file_name = `${file_name}.json`;
+
+            var a = document.createElement('a');
+            var url = window.URL.createObjectURL(new Blob([corpus], {type: 'application/json'}, file_name));
+
+            a.setAttribute('href', url)
+            a.setAttribute('download', file_name)
+            document.body.appendChild(a)
+            a.click();
+            window.URL.revokeObjectURL(url);
+            a.remove();
+        }
+
+        $scope.delete = (array, index) => array.splice(index, 1);
+
+        $scope.addDoc = function () {
+            $scope.documents = [{id: "document", data: ""}, ...$scope.documents]
+        }
+
+    }])
+    .controller("archivos.createFiles" ,["$scope", "$state", function($scope, $state){
+
+    }])
+    .controller('corpus', ["$scope", "$state", "$http", "data", "$rootScope", function($scope, $state, $http, data, $rootScope){
         
         var peticion = ""
         var contador = []
@@ -205,7 +253,7 @@
                     return $state.go("grafico");
                 alert("No se ha obtenido la informacion correcta")
                 
-            } catch (e) { alert(`Error: ${e}`) }
+            } catch (e) { console.log(e); alert(`Error: ${e}`) }
             finally { waitingDialog.hide() }             
         }
 
@@ -220,18 +268,6 @@
             }
         }).catch(e => console.log('Error corpus.json', e))
 
-    })()}])
-    .controller('listener', ["$scope", "$state", function($scope, $state){
-        console.log("Este controlador funciona solo con conexiones localhost")
-        var socket_tweets = io.connect('http://localhost:3002', {'forceNew':true }); //tweets
-        $scope.tweets = [];
-        socket_tweets.on('tweet', function (tweet) {
-            if ($scope.tweets.length >= 25)
-                $scope.tweets.pop();
-            $scope.tweets = [tweet, ...$scope.tweets];
-            $scope.$apply()
-        })
-        $scope.$on('$destroy', ()=>  socket_tweets.close())
     }])
     .controller('grafico', ["$scope", "$state", "data", '$rootScope', function ($scope, $state, data, $rootScope) {
         
@@ -379,3 +415,15 @@
     .controller('documento', [function(){
 
     }])
+    /*.controller('listener', ["$scope", "$state", function($scope, $state){
+        console.log("Este controlador funciona solo con conexiones localhost")
+        var socket_tweets = io.connect('http://localhost:3002', {'forceNew':true }); //tweets
+        $scope.tweets = [];
+        socket_tweets.on('tweet', function (tweet) {
+            if ($scope.tweets.length >= 25)
+                $scope.tweets.pop();
+            $scope.tweets = [tweet, ...$scope.tweets];
+            $scope.$apply()
+        })
+        $scope.$on('$destroy', ()=>  socket_tweets.close())
+    }])*/

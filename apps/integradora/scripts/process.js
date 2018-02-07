@@ -376,8 +376,8 @@ function cp_tfidf (setPalabras, corpus, normalization) {
 	}
 }
 
-function cp_corpus(documentos, cleaner, Snowball) {
-	const stemmer = steam()
+function cp_corpus(documentos, cleaner, Snowball, lang) {
+	const stemmer = steam(lang)
 	var corpus = [] // [Map] new Map("word", frecuency)
 	var setPalabras = new Set() //Palabras sin repetir del corpus
 
@@ -385,8 +385,17 @@ function cp_corpus(documentos, cleaner, Snowball) {
 		var valuesDoc = new Set()
 		var map = new Map()
 
-		if (!doc.tweets)
-			doc.tweets = doc.text
+		if (!doc.tweets && doc.text)
+			doc.tweets = doc.text;
+
+		if (Array.isArray(doc.tweets)) {
+
+		} else if (typeof doc.tweets === "string") {
+			doc.tweets = [doc.tweets];
+		} else {
+			console.log("Bad .json file")
+			throw new Error("Bad .json file")
+		}
 
 		var docWords = doc.tweets.reduce((words, t) => [...words, ...cleaner(t, stemmer) ], []) //Todas las palabras del doc
 
@@ -408,8 +417,17 @@ function cp_corpus(documentos, cleaner, Snowball) {
 	setPalabras = [...setPalabras]
 	return {setPalabras, corpus}
 
-	function steam () {
-		const stemmer = new Snowball("spanish")
+	function steam (lang) {
+		var stemmer; 
+
+		if (lang === "spanish") {
+			stemmer = new Snowball("spanish")
+		} else if (lang === "english") {
+			stemmer = new Snowball("english")
+		} else {
+			return function (word) { return word };
+		}
+
 		return function (word) {
 			stemmer.setCurrent(word);
 			stemmer.stem();
@@ -429,19 +447,21 @@ async function getCorpus(id) {
 	return JSON.parse(data)
 }
 
-async function getJPP(corpus1, corpus2, k = 5, lambda = 0.01, tfidf = "log", topicos = "terminos") {
+async function getJPP(corpus1, corpus2, k = 5, lambda = 0.01, tfidf = "log", topicos = "terminos", lang = "spanish") {
 
 	if (tfidf === "log")
-		console.log("[Normalizacion logaritmica]")
+		console.log("Normalizacion [logaritmica]")
 	else
-		console.log("[Doble normalization 0.5]")
+		console.log("Normalizacion [Doble 0.5]")
 
 	if (topicos === "terminos")
 		console.log("Topicos [matriz topicos x terminos]")
 	else
 		console.log("Topicos [matriz documentos x topicos]")
 
-	var arr_data = await Promise.all( [getX(corpus1),  getX(corpus2)] )
+	console.log(`Stemming [${lang}]`);
+
+	var arr_data = await Promise.all( [getX(corpus1, lang),  getX(corpus2, lang)] )
 
 	var data_1 = arr_data[0]
 	var data_2 = arr_data[1] //X_2 [{map, values}, {map, values}]
@@ -526,7 +546,7 @@ async function getJPP(corpus1, corpus2, k = 5, lambda = 0.01, tfidf = "log", top
 	}
 }
 
-async function getX(corpus_id) {
+async function getX(corpus_id, lang) {
 	var documentos;
 
 	if (Array.isArray(corpus_id))
@@ -534,9 +554,9 @@ async function getX(corpus_id) {
 	else
 		documentos = await getCorpus(corpus_id);
 
-	var worker = new GenericWebWorker(documentos, cp_corpus, cleaner, Snowball)
-	var data = await worker.exec((documentos, cp_corpus, cleaner, Snowball) => {
-		return cp_corpus(documentos, cleaner, Snowball)
+	var worker = new GenericWebWorker(documentos, cp_corpus, cleaner, Snowball, lang)
+	var data = await worker.exec((documentos, cp_corpus, cleaner, Snowball, lang) => {
+		return cp_corpus(documentos, cleaner, Snowball, lang)
 	})
 
 	return data
