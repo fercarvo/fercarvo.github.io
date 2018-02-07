@@ -537,11 +537,21 @@ async function getJPP(corpus1, corpus2, k = 5, lambda = 0.01, tfidf = "log", top
 		return to_doc.map(topico => {
 			topico = topico.map(index_doc => corpus[index_doc].map)
 			topico = topico.map(doc => {
-				doc = [...doc.entries()].sort((a, b)=> b[1]-a[1]) //[ ['perro', 233], ['gato', 9] ]
-				return doc.slice(0, 7).map(obj => obj[0]) //['perro', 'gato', 'caballo']
+				doc = [...doc.entries()].sort((a, b)=> b[1]-a[1]) //[ ['perro', 233], ['gato', 9], ['caballo', 3] ]
+				return doc.slice(0, 7).map(obj => obj[0]) //['perro', 'gato', 'caballo'] //Each doc
 			})
-			topico = topico.reduce((arr, doc_arr)=> [...arr, ...doc_arr], [])
-			return [...new Set(topico)].slice(0, 7)
+
+			var words_topico =  []
+			while (topico.some(doc => doc.length > 0)){
+				for (var doc of topico) {
+					words_topico.push( doc.shift() ) //Se agrega al arreglo el primer elemento de cada doc (tiene el mayor tf)
+				}
+			}
+
+			return [...new Set(words_topico.filter(w => w !== undefined))].slice(0,7)
+
+			//topico = topico.reduce((arr, doc_arr)=> [...arr, ...doc_arr], [])
+			//return [...new Set(topico)].slice(0, 7)
 		})
 	}
 }
