@@ -165,6 +165,53 @@
         });
     })
 
+    function modalWait (msg = "Por favor espere") {
+        waitingDialog.show(msg);
+
+        var msg_flag = true
+        var msg_timer = setInterval(()=> {
+            if (msg_flag)
+                msg_flag = false;
+            else
+                msg_flag = true;
+        }, 15000)
+
+        var time
+        var cronometro_timer = cronometro(t => {
+            if (msg_flag) {
+                waitingDialog.message(msg)
+            } else {
+                waitingDialog.message(`Tiempo de ejecución ${t}`);
+                time = t;
+            }
+        })
+
+        return function () {
+            clearInterval(msg_timer);
+            cronometro_timer();
+            waitingDialog.hide();
+            return time
+        }
+    }
+
+    function cronometro(callback) {
+        var t = 0; 
+        var time = ``;
+        var interval = setInterval(()=> {
+            t += 1000;
+            var hour = Math.trunc(t/36000000)%60
+            var min = Math.trunc(t/60000)%60;
+            var seg = Math.trunc((t/1000)%60);
+            //var mils = Math.trunc((t%1000)/10);
+            time = `${hour > 9 ? hour : '0'+hour}:${min > 9 ? min : '0'+min}:${seg > 9 ? seg : '0'+seg}`
+            callback(time)
+        }, 1000)
+
+        return function() {
+            clearInterval(interval)
+        }
+    }
+
     function loadTemplates($state, goState, $http, $templateCache) {
         var promises = []
         var states = $state.get()

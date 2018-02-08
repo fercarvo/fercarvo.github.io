@@ -1,3 +1,46 @@
-<div class="panel-body">
-	Muy pronto...
-</div>
+  <div class="panel-body">
+      <form ng-submit="crearCorpus(fileName)" id="formArchivos">
+        <div class="form-row">
+          <div class="form-group col-md-5">
+            <label>File Name</label>
+            <div class="input-group">
+              <input title="Insert a file name" ng-init="fileName='myCorpus'" ng-model="fileName" type="text" class="form-control" aria-describedby="json" required>
+              <span class="input-group-addon" id="json">.json</span>
+            </div>
+          </div>
+
+          <div class="form-group col-md-5">
+            <label>Select files</label>
+              <input title="Insert multiple files" id="filesInput" type="file" multiple required>
+          </div>
+
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col-md-12" >
+            <button ng-disabled="disabled" type="submit" class="btn btn-primary">Generar</button>
+          </div>  
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col-md-12">
+            <table class="table">
+              <thead>
+                <tr>
+    				<td>#</td>
+                  	<th>Document name</th>
+                  	<th>Type</th>
+                </tr>
+              </thead>
+              <tbody >
+                <tr ng-repeat="file in files">
+                  <td>{{$index + 1}}</td>
+                  <td >{{file.name}}</td>
+                  <td >{{file.type}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </form>
+  </div>

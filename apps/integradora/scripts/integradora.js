@@ -77,8 +77,8 @@
         $scope.k = 5
         $scope.lambda = 0.001
         $scope.alpha = 0.1
-        $scope.tfidf = "log"
-        $scope.topicos = "terminos"
+        $scope.tfidf = "double"
+        $scope.topicos = "documentos"
         $scope.stemming = "spanish"
 
         $scope.corpus1 = {}
@@ -147,8 +147,8 @@
             data.params.k = k
             data.params.lambda = lambda
 
-            waitingDialog.show('Procesando corpus, por favor espere');
-
+            var time = modalWait('Procesando, por favor espere')
+            //waitingDialog.show('Procesando corpus, por favor espere');
             try {
                 var res = await getJPP(corpus1, corpus2, data.params.k, data.params.lambda, tfidf, topicos, stemming);
                 data.resultado = res;
@@ -160,7 +160,7 @@
                 alert("No se ha obtenido la informacion correcta")
                 
             } catch (e) { console.log(e); alert(`Error: ${e}`) }
-            finally { waitingDialog.hide() }             
+            finally { console.log('time', time()) }             
         }
 
     }])
@@ -192,6 +192,53 @@
 
     }])
     .controller("archivos.createFiles" ,["$scope", "$state", function($scope, $state){
+        
+        $scope.files = []
+        var corpus_json = []
+
+        document.getElementById('filesInput').onchange = evt => {
+            var files = evt.target.files;
+            $scope.disabled = true;
+            $scope.files = [];
+            var corpus = []
+            corpus_json = []
+
+            for (var file of files) {
+                $scope.files.push({name: file.name, type: file.type || "n/n"});
+
+                corpus.push(new Promise(resolve => {
+                    var reader = new FileReader();
+                    reader.onload = () => resolve( {text: [reader.result]} );
+                    reader.readAsText(file);
+                }))
+            }
+
+            $scope.$apply();
+
+            Promise.all(corpus).then(corpus => {
+                $scope.disabled = false;
+                corpus_json = corpus
+                console.log("corpus", corpus_json)
+                $scope.$apply()
+            })
+            .catch(e => console.log("Error leer archivos", e))
+        }
+
+        $scope.crearCorpus = fileName => {
+            fileName = fileName + '.json'
+            if (confirm(`Desea guardar el archivo ${fileName}?`)) {
+                var a = document.createElement('a');
+                var url = window.URL.createObjectURL(new Blob([JSON.stringify(corpus_json)], {type: 'application/json'}, fileName));
+
+                a.setAttribute('href', url)
+                a.setAttribute('download', fileName)
+                document.body.appendChild(a)
+                a.click();
+                window.URL.revokeObjectURL(url);
+                a.remove();
+            }
+        }
+
 
     }])
     .controller('corpus', ["$scope", "$state", "$http", "data", "$rootScope", function($scope, $state, $http, data, $rootScope){
@@ -241,7 +288,8 @@
             console.log(`\nCp1 ${contador[0].fecha}`)
             console.log(`Cp2 ${contador[1].fecha}`)
 
-            waitingDialog.show('Procesando corpus, por favor espere');
+            //waitingDialog.show('Procesando corpus, por favor espere');
+            var time = modalWait('Procesando, por favor espere');
 
             try {
                 var res = await getJPP(data.params.id1, data.params.id2, data.params.k, data.params.lambda, tfidf, topicos);
@@ -254,7 +302,7 @@
                 alert("No se ha obtenido la informacion correcta")
                 
             } catch (e) { console.log(e); alert(`Error: ${e}`) }
-            finally { waitingDialog.hide() }             
+            finally { console.log('time', time()) }             
         }
 
         fetch(`https://fercarvo.github.io/apps/integradora/DB/corpus.json`)
@@ -278,7 +326,7 @@
 
         $scope.matrix = function() { $state.go('grafico.matrix') }
 
-        waitingDialog.hide()
+        //waitingDialog.hide()
         $state.go('grafico.matrix')
         var M = [...data.resultado.M]
         $scope.topicos_1 = data.resultado.topicos_1;

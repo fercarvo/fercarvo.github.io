@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<meta charset="utf-8">
+    <title>File to JSON</title>
+</head>
+<body >
+    <h1>
+        Reuters FILES parser to JSON
+    </h1>
+    <p>
+    	El siguiente script parsea archivos <strong>.sgm</strong> los cuales contienen una colección de 578 a 1000
+    	documentos (articulos periodisticos) cada uno.
+
+    	La información de estos corpus se la obtuvo de <a target="_blank" rel="noopener noreferrer" href="http://www.daviddlewis.com/resources/testcollections/reuters21578/">reuters21578</a>
+    </p>
+    <p>
+    	<a href="http://www.daviddlewis.com/resources/testcollections/reuters21578/reuters21578.tar.gz">Gzipped tar file</a>
+    </p>
+    <div>
+    	<form>
+    		<div>
+	    		Ingrese archivo de reuters <input type="file" required id="xml">
+    		</div>
+    		<p></p>
+    	</form>
+    </div>
+
+<script>
+document.getElementById('xml').onchange = evt => {	
+	var file = evt.target.files[0];
+	console.log("file name", file.name)
+	console.log("file type", file.type)
+	console.log("file size", file.size)
+
+    var reader = new FileReader();
+
+    reader.onload = () => {
+        try {
+			var xmlDoc = new DOMParser().parseFromString(reader.result, "text/html");
+        	var data = xmlToJson(xmlDoc)
+        	//console.log("full", data.HTML.BODY.REUTERS)
+        	data = data.HTML.BODY.REUTERS.map(a => {
+        		if (Array.isArray(a.TEXT["#text"])) {
+        			return  {
+	        			date: (function (){
+	        				var date = a.DATE.trim().split(' ')[0].split('-');
+	        				var hour = a.DATE.trim().split(' ')[1];
+	        				var day = date[0]
+	        				var month = date[1]
+	        				var year = date[2]
+
+	        				if (month === 'JAN') {
+	        					month = '01'
+	        				} else if (month === 'FEB') {
+	        					month = '02'
+	        				} else if (month === 'MAR') {
+	        					month = '03'
+        					} else if (month === 'APR') {
+	        					month = '04'
+        					} else if (month === 'MAY') {
+	        					month = '05'
+        					} else if (month === 'JUN') {
+	        					month = '06'
+        					} else if (month === 'JUL') {
+	        					month = '07'
+        					} else if (month === 'AUG') {
+	        					month = '08'
+        					} else if (month === 'SEP' || month === 'SEPT') {
+	        					month = '09'
+        					} else if (month === 'OCT') {
+	        					month = '10'
+        					} else if (month === 'NOV') {
+	        					month = '11'
+        					} else if (month === 'DEC') {
+	        					month = '12'
+	        				}
+
+	        				return new Date(`${year}-${month}-${day}T${hour}Z`)
+	        			})(),
+	        			notParserDate: a.DATE,
+	        			places: a.PLACES,
+	        			text: a.TEXT["#text"]
+	        		}
+        		} else {
+        			return null
+        		}        		
+        	})
+
+        	var corpus = data.filter(doc => doc !== null)
+            console.log("corpus", corpus)
+
+            var doc = corpus.find(doc => doc.date instanceof Date)
+            var file_name = `${file.name.split('.')[0]}_${doc ? `${doc.date.toUTCString()}.json`: 'corpus.json'}`
+
+            if (confirm(`Desea guardar el archivo ${file_name}`)) {
+	            var a = document.createElement('a');
+	            var url = window.URL.createObjectURL(new Blob([JSON.stringify(corpus)], {type: 'application/json'}, file_name));
+
+	            a.setAttribute('href', url)
+	            a.setAttribute('download', file_name)
+	            document.body.appendChild(a)
+	            a.click();
+	            window.URL.revokeObjectURL(url);
+	            a.remove();
+            }
+
+        } catch (e) {
+            console.log("Error leer archivo", e)
+            alert("Archivo no valido, por favor ingrese uno con el formato XML adecuado");
+        }
+    }
+
+    reader.readAsText(file);
+}
+
+
+// Changes XML to JSON
+// Modified version from here: http://davidwalsh.name/convert-xml-json
+function xmlToJson(xml) {
+
+	// Create the return object
+	var obj = {};
+
+	if (xml.nodeType == 1) { // element
+		// do attributes
+		if (xml.attributes.length > 0) {
+		obj["@attributes"] = {};
+			for (var j = 0; j < xml.attributes.length; j++) {
+				var attribute = xml.attributes.item(j);
+				obj["@attributes"][attribute.nodeName] = attribute.nodeValue;
+			}
+		}
+	} else if (xml.nodeType == 3) { // text
+		obj = xml.nodeValue;
+	}
+
+	// do children
+	// If just one text node inside
+	if (xml.hasChildNodes() && xml.childNodes.length === 1 && xml.childNodes[0].nodeType === 3) {
+		obj = xml.childNodes[0].nodeValue;
+	}
+	else if (xml.hasChildNodes()) {
+		for(var i = 0; i < xml.childNodes.length; i++) {
+			var item = xml.childNodes.item(i);
+			var nodeName = item.nodeName;
+			if (typeof(obj[nodeName]) == "undefined") {
+				obj[nodeName] = xmlToJson(item);
+			} else {
+				if (typeof(obj[nodeName].push) == "undefined") {
+					var old = obj[nodeName];
+					obj[nodeName] = [];
+					obj[nodeName].push(old);
+				}
+				obj[nodeName].push(xmlToJson(item));
+			}
+		}
+	}
+	return obj;
+}
+</script>
+</body>
+</html>
