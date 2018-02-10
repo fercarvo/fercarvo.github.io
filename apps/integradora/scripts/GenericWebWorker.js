@@ -85,7 +85,7 @@ class GenericWebWorker {
                     var result = await cb(...args);//If it is a promise or async function
                     return postMessage(result)
 
-                } catch (e) { throw `CallbackError: ${e}` }
+                } catch (e) { throw new Error(`CallbackError: ${e}`) }
             } catch (e) { postMessage({error: e.message}) }
         }
     }

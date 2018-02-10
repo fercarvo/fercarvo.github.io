@@ -15,7 +15,6 @@ function cleaner(string, stemmer) {
 		var array = string.match(/\b(\w+)\b/g) //Se convierte string a array de palabras
 		array = array.filter(word => filterCheck(word))
 		array = array.map(word => stemmer(word))
-		//array = snowball.stemword(array, 'spanish') //Se realiza el stemming
 
 		if (array.length <= 4)
 			return []
@@ -119,7 +118,6 @@ function JPP (X, R, k, alpha, lambda, epsilon, maxiter, Matrix){
 	var n = X.rows // # filas X
 	var v1 = X.columns // # columnas X
 	var W = Matrix.random(n, k) //Matriz aleatoria de n x k
-	//var H = nj.random([k,v1]) //Matriz aleatoria de k x v1
 	var H = R
 	var M = Matrix.random(k,k) //Matriz aleatoria de k x k
 	var I = Matrix.identity(k) //Matriz identidad k x k
@@ -131,44 +129,39 @@ function JPP (X, R, k, alpha, lambda, epsilon, maxiter, Matrix){
 	var Obj = 10000000
 	var eps = 2^(-52)
 	var prevObj = 2*Obj
-	var J
-	var W_1, W_2, W_3, W_4
-	var WtW, WtX
-	var M_1, M_2, M_3, M_4, M_5
-	var H_1, H_2
-	var delta
-
 
 	while ((Math.abs(prevObj-Obj) > epsilon) && (itNum <= maxiter)) {
-		J = dot(M, R) // Multiplicacion matricial
 
-		//W =  W .* ( M_1  ./ max(W*(M_2),eps) ); % eps = 2^(-52)
-		W_1 = dot(X, H.T.add(J.T))//X*(H'+J')
-		W_2 = ( ( dot(J, J.T)).add( dot(H, H.T)) ).add(lambda)   //((J*J')+(H*H')+ lambda) //
-		W_3 = dot(W, W_2)
-		W_4 = maxMatlab(W_3, eps) //////////////////////////////////////////
-		W = W.multiply( W_1.divide( W_4 ))
+		W = (() => {
+			let J = dot(M, R) // Multiplicacion matricial
+			let W_1 = dot(X, H.T.add(J.T))//X*(H'+J')
+			let W_2 = ( ( dot(J, J.T)).add( dot(H, H.T)) ).add(lambda)   //((J*J')+(H*H')+ lambda) //
+			let W_3 = dot(W, W_2)
+			let W_4 = maxMatlab(W_3, eps)
+			return W.multiply( W_1.divide( W_4 ))
+		})()
 
-		WtW = dot( W.T , W)//W'*W
-		WtX = dot( W.T, X) //W'*X;
+		let WtW = dot( W.T , W)//W'*W
+		let WtX = dot( W.T, X) //W'*X;
 
-		//M = M .* ( ((WtX*R') + (alpha*I)) ./ max( (WtW*M*R*R') + ( (alpha)*M)+lambda,eps) );
-		M_1 = ( dot(WtX, R.T) ).add( I.multiply(alpha))   //(WtX*R') + (alpha*I)
-		M_2 = dot( dot( dot(WtW, M) , R) , R.T) //(WtW*M*R*R')
-		M_3 = ( M.multiply(alpha) ).add(lambda)  //( (alpha)*M) + lambda
-		M_4 = M_2.add(M_3)// (WtW*M*R*R') + ( (alpha)*M) + lambda
-		M_5 = maxMatlab(M_4, eps)
-		M = M.multiply( M_1.divide(M_5)) //M_1 ./ M_5
+		M = (() => {
+			let M_1 = ( dot(WtX, R.T) ).add( I.multiply(alpha))   //(WtX*R') + (alpha*I)
+			let M_2 = dot( dot( dot(WtW, M) , R) , R.T) //(WtW*M*R*R')
+			let M_3 = ( M.multiply(alpha) ).add(lambda)  //( (alpha)*M) + lambda
+			let M_4 = M_2.add(M_3)// (WtW*M*R*R') + ( (alpha)*M) + lambda
+			let M_5 = maxMatlab(M_4, eps)
+			return M.multiply( M_1.divide(M_5)) //M_1 ./ M_5
+		})()
 
 		//H = H .* (WtX./max(WtW*H+lambda,eps));
-		H_1 = ( dot(WtW, H)).add(lambda)//WtW*H+lambda
-		H_2 = maxMatlab(H_1, eps)
-		H = H.multiply( WtX.divide(H_2) ) //H .* (WtX./max(H_1,eps));
+		H = (() => {
+			let H_1 = ( dot(WtW, H)).add(lambda)//WtW*H+lambda
+			let H_2 = maxMatlab(H_1, eps)
+			return H.multiply( WtX.divide(H_2) ) //H .* (WtX./max(H_1,eps));
+		})()
 
 		prevObj = Obj
 		Obj = ComputeLoss(X,W,H,M,R,lambda,alpha, trXX, I)
-
-		delta = Math.abs(prevObj-Obj) //delta = abs(prevObj-Obj);
 
 		itNum++
 	}
@@ -206,25 +199,6 @@ class Matrix {
             throw new Error(`${matrix} is not an Array of Number Arrays`)
         }
     }
-
-    /*static async asyncDot(A, B) {
-    	if (!(A instanceof Matrix))
-    		A = new Matrix(B);
-
-    	if (!(B instanceof Matrix))
-    		B = new Matrix(B);
-
-    	if (A.columns !== B.rows)
-    		throw "Invalid matrix size for matrix multiplication"
-
-    	var worker = new GenericWebWorker(A, B, Matrix);	
-    	var url = GenericWebWorker.getURL()
-    	var result = await worker.exec((A, B, Matrix) => {
-    		return Matrix.dot(A, B)	
-    	})//result = [ [[1,1], 234], [[1,2], 234234],... ]
-
-    	return result;
-    }*/
 
     static dot (M, N) {
     	var result = Matrix.zeros(M.rows, N.columns);
@@ -288,8 +262,14 @@ class Matrix {
 
     	if (!(B instanceof Matrix))
     		B = new Matrix(B);
-        var result = this.data.map((fila, i) => fila.map((elm, j) => elm - B.data[i][j]))
-        return new Matrix(result)
+        //var result = this.data.map((fila, i) => fila.map((elm, j) => elm - B.data[i][j]))
+        //return new Matrix(result)
+
+        var result = new Matrix(null, 'empty')
+        result.data = this.data.map((fila, i) => fila.map((elm, j) => elm - B.data[i][j]))
+        result.rows = this.rows
+        result.columns = this.columns
+        return result
     }
 
     add (B) {
@@ -298,8 +278,14 @@ class Matrix {
 
     	if (!(B instanceof Matrix))
     		B = new Matrix(B);
-        var result = this.data.map((fila, i) => fila.map((elm, j) => elm + B.data[i][j]))
-        return new Matrix(result)
+        //var result = this.data.map((fila, i) => fila.map((elm, j) => elm + B.data[i][j]))
+        //return new Matrix(result)
+
+        var result = new Matrix(null, 'empty')
+        result.data = this.data.map((fila, i) => fila.map((elm, j) => elm + B.data[i][j]))
+        result.rows = this.rows
+        result.columns = this.columns
+        return result
     }
 
     multiply (B) {
@@ -308,8 +294,14 @@ class Matrix {
 
     	if (!(B instanceof Matrix))
     		B = new Matrix(B);
-    	var result = this.data.map((fila, i) => fila.map((elm, j) => elm * B.data[i][j]))
-    	return new Matrix(result)
+    	//var result = this.data.map((fila, i) => fila.map((elm, j) => elm * B.data[i][j]))
+    	//return new Matrix(result)
+
+    	var result = new Matrix(null, 'empty')
+        result.data = this.data.map((fila, i) => fila.map((elm, j) => elm * B.data[i][j]))
+        result.rows = this.rows
+        result.columns = this.columns
+        return result
     }
 
     divide (B) {
@@ -318,18 +310,36 @@ class Matrix {
 
     	if (!(B instanceof Matrix))
     		B = new Matrix(B);
-    	var result = this.data.map((fila, i) => fila.map((elm, j) => elm / B.data[i][j]))
-    	return new Matrix(result)
+    	//var result = this.data.map((fila, i) => fila.map((elm, j) => elm / B.data[i][j]))
+    	//return new Matrix(result)
+
+    	var result = new Matrix(null, 'empty')
+        result.data = this.data.map((fila, i) => fila.map((elm, j) => elm / B.data[i][j]))
+        result.rows = this.rows
+        result.columns = this.columns
+        return result
     }
 
     eval (fn) {
-    	var result = this.data.map(fila => fila.map(val => fn(val)))
-        return new Matrix(result)
+    	//var result = this.data.map(fila => fila.map(val => fn(val)))
+        //return new Matrix(result)
+
+        var result = new Matrix(null, 'empty')
+        result.data = this.data.map(fila => fila.map(val => fn(val)))
+        result.rows = this.rows
+        result.columns = this.columns
+        return result
     }
 
     get T () {
-    	var result = this.data[0].map((x,i)=> this.data.map(x => x[i])) 
-    	return new Matrix(result)
+    	//var result = this.data[0].map((x,i)=> this.data.map(x => x[i])) 
+    	//return new Matrix(result)
+
+    	var result = new Matrix(null, 'empty')
+        result.data = this.data[0].map((x,i)=> this.data.map(x => x[i])) 
+        result.rows = this.columns
+        result.columns = this.rows
+        return result
     }
 
     get sum () {

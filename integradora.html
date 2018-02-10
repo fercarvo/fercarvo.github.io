@@ -178,11 +178,11 @@
 
         var time
         var cronometro_timer = cronometro(t => {
+            time = t;
             if (msg_flag) {
                 waitingDialog.message(msg)
             } else {
                 waitingDialog.message(`Tiempo de ejecución ${t}`);
-                time = t;
             }
         })
 
