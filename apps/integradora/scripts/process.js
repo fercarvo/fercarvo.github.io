@@ -200,12 +200,14 @@ class Matrix {
 
     	var result = Matrix.zeros(M.rows, N.columns);
 
-    	result.data = result.data.map((row, i) => {
-    		return row.map((val, j) => {
-    			return M.data[i].reduce((sum, elm, k) => sum + (elm * N.data[k][j]) ,0)
-    		})
-    	})
-    	return result;
+    	for (var i = 0; i < result.rows; i++) {
+    		for (var j = 0; j < result.columns; j++) {
+    			for (var k = 0; k < M.columns; k++) {
+    				result.data[i][j] += M.data[i][k] * N.data[k][j]
+    			}
+    		}
+    	}
+    	return result
     }
 
     static random (n, m) {
